@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "poetry run"
 version = "0.1.0"
-description = "Pipeline to get wordcloud from job postings"
+description = "Pipeline to get wordcloud from job postings."
 authors = ["Frank Cao <franktcao@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.8,<3.9"
 pandas = "^1.1.4"
 scikit-learn = "^0.23.2"
 pyspark = "^3.0.1"
@@ -16,9 +16,11 @@ seaborn = "^0.11.0"
 pyplot-themes = "^0.2.2"
 matplotlib = "^3.3.2"
 spacy = "^2.3.2"
-bs4 = "^0.0.1"
-BeautifulSoup = "^3.2.2"
 kedro = "^0.16.6"
+beautifulsoup4 = "^4.9.3"
+pytest = "^6.1.2"
+black = "19.10b0"
+mypy = "^0.790"
 
 [tool.poetry.dev-dependencies]
 
