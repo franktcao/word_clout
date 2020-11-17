@@ -1,13 +1,27 @@
 version: "3.4"
 
+x-tests: &tests
+  build:
+    context: .
+    dockerfile: testing_framework/Dockerfile
+  image: word_clout:test-venv
+  working_dir: /home
+  volumes:
+    - .:/home/
+
 services:
   unit-tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: word_clout:test-venv
-    working_dir: /home
-    volumes:
-      - .:/home/
+    <<: *tests
     container_name: src-unit-tests
     entrypoint: python3 -m pytest -c testing_framework/pytest.ini
+  pycharm-environment:
+    <<: *tests
+    container_name: word-clout-pycharm-environment
+  black:
+    <<: *tests
+    container_name: word-clout-black
+    entrypoint: black
+  isort:
+    <<: *tests
+    container_name: word-clout-isort
+    entrypoint: isort

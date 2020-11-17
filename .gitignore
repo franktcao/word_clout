@@ -1,26 +1,32 @@
 ##########################
 # KEDRO PROJECT
 
+# also keep all .gitkeep files
+!.gitkeep
+
 # ignore all local configuration
 ../conf/local/**
 !../conf/local/.gitkeep
 
+# Sphinx documentation
+docs/_build/
+
+# IPython
+.ipython/profile_default/history.sqlite
+.ipython/profile_default/startup/README
+
 # ignore potentially sensitive credentials files
-../conf/**/*credentials*
+conf/**/*credentials*
 
 # ignore everything in the following folders
-../data/**
-../logs/**
+data/**
+logs/**
 
 # except their sub-folders
-!../data/**/
-!../logs/**/
-
-# also keep all .gitkeep files
-!.gitkeep
-
+!data/**/
+!logs/**/
 # also keep the example dataset
-!../data/01_raw/iris.csv
+!data/01_raw/iris.csv
 
 
 ##########################
@@ -119,18 +125,12 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-# Sphinx documentation
-../docs/_build/
-
 # PyBuilder
 target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# IPython
-../.ipython/profile_default/history.sqlite
-../.ipython/profile_default/startup/README
 
 # pyenv
 .python-version
@@ -142,13 +142,7 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
-.env
 .venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
 
 # mkdocs documentation
 /site

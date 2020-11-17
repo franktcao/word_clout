@@ -22,6 +22,13 @@ pytest = "^6.1.2"
 black = "19.10b0"
 mypy = "^0.790"
 coverage = "^5.3"
+mocker = "^1.1.1"
+pytest-mock = "^3.3.1"
+pytest-cov = "^2.10.1"
+pytest-black = "^0.3.12"
+pytest-mypy = "^0.8.0"
+mypy-extensions = "^0.4.3"
+isort = "^5.6.4"
 
 [tool.poetry.dev-dependencies]
 

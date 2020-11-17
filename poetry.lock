@@ -209,6 +209,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "filelock"
+version = "3.0.12"
+description = "A platform independent file lock."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "fsspec"
 version = "0.6.3"
 description = "File-system specification"
@@ -247,6 +255,19 @@ description = "Vestigial utilities from IPython"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "isort"
+version = "5.6.4"
+description = "A Python utility / library to sort Python imports."
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.extras]
+pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
+requirements_deprecated_finder = ["pipreqs", "pip-api"]
+colors = ["colorama (>=0.4.3,<0.5.0)"]
 
 [[package]]
 name = "jinja2"
@@ -414,6 +435,14 @@ numpy = ">=1.15"
 pillow = ">=6.2.0"
 pyparsing = ">=2.0.3,<2.0.4 || >2.0.4,<2.1.2 || >2.1.2,<2.1.6 || >2.1.6"
 python-dateutil = ">=2.1"
+
+[[package]]
+name = "mocker"
+version = "1.1.1"
+description = "Graceful platform for test doubles in Python (mocks, stubs, fakes, and dummies)."
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "murmurhash"
@@ -637,6 +666,62 @@ toml = "*"
 [package.extras]
 checkqa_mypy = ["mypy (==0.780)"]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
+
+[[package]]
+name = "pytest-black"
+version = "0.3.12"
+description = "A pytest plugin to enable format checking with black"
+category = "main"
+optional = false
+python-versions = ">=2.7"
+
+[package.dependencies]
+black = {version = "*", markers = "python_version >= \"3.6\""}
+pytest = ">=3.5.0"
+toml = "*"
+
+[[package]]
+name = "pytest-cov"
+version = "2.10.1"
+description = "Pytest plugin for measuring coverage."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.dependencies]
+coverage = ">=4.4"
+pytest = ">=4.6"
+
+[package.extras]
+testing = ["fields", "hunter", "process-tests (==2.0.2)", "six", "pytest-xdist", "virtualenv"]
+
+[[package]]
+name = "pytest-mock"
+version = "3.3.1"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+pytest = ">=5.0"
+
+[package.extras]
+dev = ["pre-commit", "tox", "pytest-asyncio"]
+
+[[package]]
+name = "pytest-mypy"
+version = "0.8.0"
+description = "Mypy static type checker plugin for Pytest"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+attrs = ">=19.0"
+filelock = ">=3.0"
+mypy = {version = ">=0.700", markers = "python_version >= \"3.8\" and python_version < \"3.9\""}
+pytest = ">=3.5"
 
 [[package]]
 name = "python-dateutil"
@@ -951,7 +1036,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.9"
-content-hash = "84e05718bfdec3d10ddbaa1a5a2644b4d6c0cb92295b3a9c626b4b68e1c9f6f7"
+content-hash = "af13d65aa6871eff837494de2b68e7d933a5491f3d7a38a8e23b72cc6c4035ee"
 
 [metadata.files]
 anyconfig = [
@@ -1087,6 +1172,10 @@ cymem = [
     {file = "cymem-2.0.3-cp38-cp38-win_amd64.whl", hash = "sha256:dd24848fbd75b17bab06408da6c029ba7cc615bd9e4a1f755fb3a090025fb922"},
     {file = "cymem-2.0.3.tar.gz", hash = "sha256:5083b2ab5fe13ced094a82e0df465e2dbbd9b1c013288888035e24fd6eb4ed01"},
 ]
+filelock = [
+    {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
+    {file = "filelock-3.0.12.tar.gz", hash = "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59"},
+]
 fsspec = [
     {file = "fsspec-0.6.3-py3-none-any.whl", hash = "sha256:89b502e4bdf51bb3cb1698d1427ec07923fa9ee05e532672e0075e642e78134d"},
     {file = "fsspec-0.6.3.tar.gz", hash = "sha256:7a6d48af15b2416c5007706039e6d46d083c89229e7cdf6474b5ef5e7e687b00"},
@@ -1105,6 +1194,10 @@ iniconfig = [
 ipython-genutils = [
     {file = "ipython_genutils-0.2.0-py2.py3-none-any.whl", hash = "sha256:72dd37233799e619666c9f639a9da83c34013a73e8bbc79a7a6348d93c61fab8"},
     {file = "ipython_genutils-0.2.0.tar.gz", hash = "sha256:eb2e116e75ecef9d4d228fdc66af54269afa26ab4463042e33785b887c628ba8"},
+]
+isort = [
+    {file = "isort-5.6.4-py3-none-any.whl", hash = "sha256:dcab1d98b469a12a1a624ead220584391648790275560e1a43e54c5dceae65e7"},
+    {file = "isort-5.6.4.tar.gz", hash = "sha256:dcaeec1b5f0eca77faea2a35ab790b4f3680ff75590bfcb7145986905aab2f58"},
 ]
 jinja2 = [
     {file = "Jinja2-2.11.2-py2.py3-none-any.whl", hash = "sha256:f0a4641d3cf955324a89c04f3d94663aa4d638abe8f733ecd3582848e1c37035"},
@@ -1209,6 +1302,9 @@ matplotlib = [
     {file = "matplotlib-3.3.2-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:799c421bc245a0749c1515b6dea6dc02db0a8c1f42446a0f03b3b82a60a900dc"},
     {file = "matplotlib-3.3.2-pp36-pypy36_pp73-manylinux2010_x86_64.whl", hash = "sha256:2f5eefc17dc2a71318d5a3496313be5c351c0731e8c4c6182c9ac3782cfc4076"},
     {file = "matplotlib-3.3.2.tar.gz", hash = "sha256:3d2edbf59367f03cd9daf42939ca06383a7d7803e3993eb5ff1bee8e8a3fbb6b"},
+]
+mocker = [
+    {file = "mocker-1.1.1.tar.bz2", hash = "sha256:2009911707c74b28bdc9959b5224717e45fcb93475b4b7bb4efad3285fcf2919"},
 ]
 murmurhash = [
     {file = "murmurhash-1.0.2-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:717196a04cdc80cc3103a3da17b2415a8a5e1d0d578b7079259386bf153b3258"},
@@ -1408,6 +1504,21 @@ pyspark-stubs = [
 pytest = [
     {file = "pytest-6.1.2-py3-none-any.whl", hash = "sha256:4288fed0d9153d9646bfcdf0c0428197dba1ecb27a33bb6e031d002fa88653fe"},
     {file = "pytest-6.1.2.tar.gz", hash = "sha256:c0a7e94a8cdbc5422a51ccdad8e6f1024795939cc89159a0ae7f0b316ad3823e"},
+]
+pytest-black = [
+    {file = "pytest-black-0.3.12.tar.gz", hash = "sha256:1d339b004f764d6cd0f06e690f6dd748df3d62e6fe1a692d6a5500ac2c5b75a5"},
+]
+pytest-cov = [
+    {file = "pytest-cov-2.10.1.tar.gz", hash = "sha256:47bd0ce14056fdd79f93e1713f88fad7bdcc583dcd7783da86ef2f085a0bb88e"},
+    {file = "pytest_cov-2.10.1-py2.py3-none-any.whl", hash = "sha256:45ec2d5182f89a81fc3eb29e3d1ed3113b9e9a873bcddb2a71faaab066110191"},
+]
+pytest-mock = [
+    {file = "pytest-mock-3.3.1.tar.gz", hash = "sha256:a4d6d37329e4a893e77d9ffa89e838dd2b45d5dc099984cf03c703ac8411bb82"},
+    {file = "pytest_mock-3.3.1-py3-none-any.whl", hash = "sha256:024e405ad382646318c4281948aadf6fe1135632bea9cc67366ea0c4098ef5f2"},
+]
+pytest-mypy = [
+    {file = "pytest-mypy-0.8.0.tar.gz", hash = "sha256:63d418a4fea7d598ac40b659723c00804d16a251d90a5cfbca213eeba5aaf01c"},
+    {file = "pytest_mypy-0.8.0-py3-none-any.whl", hash = "sha256:8d2112972c1debf087943f48963a0daf04f3424840aea0cf437cc97053b1b0ef"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
