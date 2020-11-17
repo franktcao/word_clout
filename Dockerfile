@@ -17,7 +17,7 @@ FROM python:3.8
 #                                     the tests to be run through Jenkins.
 #   PIP_CACHE_DIR               - Supress `pip` caching.
 ENV \
-  TEST_DIRECTORY=/src/              \
+  TEST_DIRECTORY=/tests/              \
   PYTHONDONTWRITEBYTECODE='1'       \
   PIP_DISABLE_PIP_VERSION_CHECK=on  \
   POETRY_VIRTUALENVS_CREATE=false   \
@@ -58,6 +58,8 @@ RUN pip install poetry
 # environment.
 WORKDIR ${TEST_DIRECTORY}
 COPY poetry.lock pyproject.toml ${TEST_DIRECTORY}
+COPY . .
+COPY testing_framework/ .
 # Note: Any files added here are read only to Jenkins. You should not copy in files that
 # are needed to run your tests.
 

@@ -29,7 +29,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# word_clout documentation build
+# src documentation build
 # configuration file, created by sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its
@@ -50,11 +50,11 @@ import re
 from kedro.framework.cli.utils import find_stylesheets
 from recommonmark.transform import AutoStructify
 
-from word_clout import __version__ as release
+from src import __version__ as release
 
 # -- Project information -----------------------------------------------------
 
-project = "word_clout"
+project = "src"
 copyright = "2020, QuantumBlack Visual Analytics Limited"
 author = "QuantumBlack"
 
@@ -175,28 +175,14 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (
-        master_doc,
-        "word_clout.tex",
-        "word_clout Documentation",
-        "QuantumBlack",
-        "manual",
-    )
+    (master_doc, "src.tex", "src Documentation", "QuantumBlack", "manual",)
 ]
 
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (
-        master_doc,
-        "word_clout",
-        "word_clout Documentation",
-        [author],
-        1,
-    )
-]
+man_pages = [(master_doc, "src", "src Documentation", [author], 1,)]
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -206,11 +192,11 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "word_clout",
-        "word_clout Documentation",
+        "src",
+        "src Documentation",
         author,
-        "word_clout",
-        "Project word_clout codebase.",
+        "src",
+        "Project src codebase.",
         "Data-Science",
     )
 ]

@@ -1,6 +1,0 @@
-context_path: word_clout.run.ProjectContext
-project_name: "word_clout"
-project_version: "0.16.6"
-package_name: "word_clout"
-hooks:
-  - word_clout.hooks.project_hooks

@@ -2,6 +2,8 @@
 # intentionally uncovered files so that coverage can be an easily verifiable 100%
 # From http://erik.io/blog/2014/09/11/why-and-how-test-coverage-100/
 [report]
+fail_under=0
+show_missing=True
 exclude_lines =
   pragma: no cover
 

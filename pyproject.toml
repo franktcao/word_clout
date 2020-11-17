@@ -21,6 +21,7 @@ beautifulsoup4 = "^4.9.3"
 pytest = "^6.1.2"
 black = "19.10b0"
 mypy = "^0.790"
+coverage = "^5.3"
 
 [tool.poetry.dev-dependencies]
 
