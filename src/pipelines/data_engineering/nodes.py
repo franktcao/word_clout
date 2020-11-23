@@ -36,6 +36,12 @@ from typing import Any, Dict
 import pandas as pd
 
 
+
+def get_job_postings() -> pd.DataFrame:
+    df = pd.DataFrame()
+    return df
+
+
 def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, Any]:
     """Node for splitting the classical Iris data set into training and test
     sets, each split into features and labels.
