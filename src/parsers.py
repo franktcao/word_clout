@@ -6,8 +6,19 @@ import time
 
 
 class IndeedEntry:
+
+    _url_description_base = "https://www.indeed.com/viewjob?jk="
+
     def __init__(self, entry):
         self.entry: bs4.element.Tag = entry
+
+    @property
+    def link(self) -> str:
+        return self.entry["data-jk"]
+
+    @property
+    def job_page(self) -> str:
+        return self._url_description_base + self.link
 
     @property
     def job_title(self) -> str:
@@ -22,12 +33,12 @@ class IndeedEntry:
         return self.entry.find(class_="sjcl")
 
     @property
-    def company_name(self) -> str:
-        return self._company_info.find("company").text.strip()
-
-    @property
     def _company_location_info(self):
         return self._company_info.find(class_="location")
+
+    @property
+    def company_name(self) -> str:
+        return self._company_info.find("company").text.strip()
 
     @property
     def location(self) -> str:
@@ -36,10 +47,6 @@ class IndeedEntry:
     @location.setter
     def location(self, location):
         self.location = location
-
-    @property
-    def link(self) -> str:
-        return self.entry["data-jk"]
 
     @property
     def neighborhood(self) -> str:
@@ -66,9 +73,10 @@ class IndeedEntry:
     def get_job_summary(self) -> str:
         return self.entry.find(class_="summary").text.strip()
 
-    def get_job_description(self, job_page) -> str:
-        page = requests.get(job_page)
-        time.sleep(1)  # ensuring at least 1 second between page grabs
+    def get_job_description(self) -> str:
+        time.sleep(1)  # Ensuring at least 1 second between page grabs
+
+        page = requests.get(self.job_page)
         soup = BeautifulSoup(page.text, "lxml")
         description = soup.find(name="div", class_="jobsearch-jobDescriptionText")
 
@@ -131,7 +139,6 @@ class IndeedParser:
     #             # summary = get_job_summary(entry)
     #
     #             job_page = 'https://www.indeed.com/viewjob?jk=' + link
-    #             #             print(link)
     #             description = get_job_description(job_page)
     #
     #             # Append the new row with data scraped
