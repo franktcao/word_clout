@@ -96,8 +96,8 @@ class IndeedParser:
 
     @property
     def full_url(self) -> str:
-        job_query = f"q={self.job_query.lower()}"
-        location = f"l={self.location.lower().replace(',', '%2C')}"
+        job_query = f"q={self.job_query}"
+        location = f"l={self.location.replace(',', '%2C')}"
         components = [self.url_base, job_query, location]
         return "&".join(components).replace(" ", "%20")
 
