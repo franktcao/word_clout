@@ -33,6 +33,7 @@ requests = "^2.25.0"
 requests-cache = "^0.5.2"
 tqdm = "^4.52.0"
 lxml = "^4.6.1"
+pytest-steps = "^1.7.3"
 
 [tool.poetry.dev-dependencies]
 

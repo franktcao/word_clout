@@ -12,6 +12,7 @@ class IndeedEntry:
 
     def __init__(self, entry):
         self.entry: bs4.element.Tag = entry
+        self._location = "DEFAULT LOCATION"
 
     @property
     def link(self) -> str:
@@ -40,15 +41,19 @@ class IndeedEntry:
 
     @property
     def company_name(self) -> str:
-        return self._company_info.find("company").text.strip()
+        return self._company_info.find(name="company").text.strip()
 
     @property
     def location(self) -> str:
-        return self._company_location_info.text.strip()
+        # self._location = self._company_location_info.text.strip()
+        if self._location == "DEFAULT LOCATION":
+            return self._company_location_info.text.strip()
+        else:
+            return self._location
 
     @location.setter
-    def location(self, location):
-        self.location = location
+    def location(self, location: str) -> None:
+        self._location = location
 
     @property
     def neighborhood(self) -> str:
@@ -56,9 +61,9 @@ class IndeedEntry:
         neighborhood_info = self._company_location_info.find(class_="span")
         neighborhood = neighborhood_info.text if neighborhood_info else ""
 
-        self.location = self.location.rstrip(neighborhood)
+        self.location = self.location.rstrip(f"({neighborhood})")
 
-        return neighborhood.strip("()")
+        return neighborhood
 
     @property
     def salary(self) -> str:
