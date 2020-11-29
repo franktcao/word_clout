@@ -1,8 +1,9 @@
-from typing import Any, List, Tuple
-import requests
-import bs4
-from bs4 import BeautifulSoup
 import time
+from typing import List
+
+import bs4
+import requests
+from bs4 import BeautifulSoup
 
 
 class IndeedEntry:
@@ -23,17 +24,18 @@ class IndeedEntry:
     @property
     def job_title(self) -> str:
         job_title_container = self.entry.find(
-            name="a",
-            attrs={"data-tn-element": "jobTitle"},
+            name="a", attrs={"data-tn-element": "jobTitle"},
         )
         return job_title_container.text.strip()
 
+    # Not covered: protected method
     @property
-    def _company_info(self) -> bs4.element.Tag:
+    def _company_info(self) -> bs4.element.Tag:  # pragma: no cover
         return self.entry.find(class_="sjcl")
 
+    # Not covered: protected method
     @property
-    def _company_location_info(self):
+    def _company_location_info(self):  # pragma: no cover
         return self._company_info.find(class_="location")
 
     @property
@@ -107,5 +109,3 @@ class IndeedParser:
         kwargs = {**dict(name="div", class_="row"), **kwargs}
         entries = parsed_page.find_all(**kwargs)
         return [IndeedEntry(entry) for entry in entries]
-
-

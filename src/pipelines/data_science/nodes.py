@@ -40,9 +40,10 @@ import numpy as np
 import pandas as pd
 
 
+# Not covered: TODO
 def train_model(
     train_x: pd.DataFrame, train_y: pd.DataFrame, parameters: Dict[str, Any]
-) -> np.ndarray:
+) -> np.ndarray:  # pragma: no cover
     """Node for training a simple multi-class logistic regression model. The
     number of training iterations as well as the learning rate are taken from
     conf/project/parameters.yml. All of the data as well as the parameters
@@ -75,7 +76,8 @@ def train_model(
     return np.vstack(weights).transpose()
 
 
-def predict(model: np.ndarray, test_x: pd.DataFrame) -> np.ndarray:
+# Not covered: TODO
+def predict(model: np.ndarray, test_x: pd.DataFrame) -> np.ndarray:  # pragma: no cover
     """Node for making predictions given a pre-trained model and a test set.
     """
     X = test_x.to_numpy()
@@ -91,7 +93,8 @@ def predict(model: np.ndarray, test_x: pd.DataFrame) -> np.ndarray:
     return np.argmax(result, axis=1)
 
 
-def report_accuracy(predictions: np.ndarray, test_y: pd.DataFrame) -> None:
+# Not covered: TODO
+def report_accuracy(predictions: np.ndarray, test_y: pd.DataFrame) -> None:  # pragma: no cover
     """Node for reporting the accuracy of the predictions performed by the
     previous node. Notice that this function has no outputs, except logging.
     """
@@ -104,6 +107,7 @@ def report_accuracy(predictions: np.ndarray, test_y: pd.DataFrame) -> None:
     log.info("Model accuracy on test set: %0.2f%%", accuracy * 100)
 
 
-def _sigmoid(z):
+# Not covered: TODO
+def _sigmoid(z):  # pragma: no cover
     """A helper sigmoid function used by the training and the scoring nodes."""
     return 1 / (1 + np.exp(-z))

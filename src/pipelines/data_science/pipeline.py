@@ -37,7 +37,8 @@ from kedro.pipeline import Pipeline, node
 from .nodes import predict, report_accuracy, train_model
 
 
-def create_pipeline(**kwargs):
+# Not ccovered: TODO
+def create_pipeline(**kwargs):  # pragma: no cover
     return Pipeline(
         [
             node(
