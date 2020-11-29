@@ -94,7 +94,9 @@ def predict(model: np.ndarray, test_x: pd.DataFrame) -> np.ndarray:  # pragma: n
 
 
 # Not covered: TODO
-def report_accuracy(predictions: np.ndarray, test_y: pd.DataFrame) -> None:  # pragma: no cover
+def report_accuracy(
+    predictions: np.ndarray, test_y: pd.DataFrame
+) -> None:  # pragma: no cover
     """Node for reporting the accuracy of the predictions performed by the
     previous node. Notice that this function has no outputs, except logging.
     """

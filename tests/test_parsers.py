@@ -91,3 +91,26 @@ class TestIndeedEntry:
 
         # === Assert
         assert actual == expected
+
+    def test_company_name(self, mocker, object_under_test: IndeedEntry):
+        # === Arrange
+        expected = "Aperture"
+
+        # Wrap company name
+        mocked_company_name = mocker.MagicMock()
+        mocked_company_name.text = "Aperture"
+
+        # Wrap mocked company location info
+        mocked_company_location_info = mocker.MagicMock()
+        mocked_company_location_info.find = lambda company: mocked_company_name
+
+        # Construct object to test that contains wrapped objects
+        mocked_entry = mocker.MagicMock(BeautifulSoup)
+        mocked_entry.find = lambda class_: mocked_company_location_info
+        object_under_test = IndeedEntry(mocked_entry)
+
+        # === Act
+        actual = object_under_test.company_name
+
+        # === Assert
+        assert actual == expected

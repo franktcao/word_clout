@@ -88,6 +88,10 @@ class IndeedEntry:
 
         return description
 
+    @_company_location_info.setter
+    def _company_location_info(self, value):
+        self.__company_location_info = value
+
 
 class IndeedParser:
     url_base = "https://www.indeed.com/jobs?"
