@@ -38,48 +38,53 @@ import pandas as pd
 from ...parsers import IndeedParser
 
 
-def get_job_postings(job_title: str = "Data Scientist", locations: List[str] = ["Boston, MA"]) -> pd.DataFrame:
-    df = pd.DataFrame()
-    # # Loop over cities
-    for location in locations:
-        # Loop over pages
-        for page_number in range(0, postings_per_city, POSTINGS_PER_PAGE):
-            URL_page_start = '&start=' + str(page_number)
-            URL = URL_base + URL_location + URL_page_start
+# TODO
+def get_job_postings(job_title: str = "Data Scientist", locations: List[str] = ["Boston, MA"]) -> pd.DataFrame: # pragma: no cover
+    pass
+    # df = pd.DataFrame()
+    # # # Loop over cities
+    # for location in locations:
+    #     # Loop over pages
+    #     for page_number in range(0, postings_per_city, POSTINGS_PER_PAGE):
+    #         URL_page_start = '&start=' + str(page_number)
+    #         URL = URL_base + URL_location + URL_page_start
 
-            page = requests.get(URL)
-            time.sleep(1)  # ensuring at least 1 second between page grabs
-            soup = BeautifulSoup(page.text, 'lxml')
+            # page = requests.get(URL)
+            # time.sleep(1)  # ensuring at least 1 second between page grabs
+            # soup = BeautifulSoup(page.text, 'lxml')
 
-            # Loop over posts/entries
-            entries = IndeedParser(job_query=job_title, location=location)
-            for i, entry in enumerate(entries):
-                sys.stdout.write(
-                    '\r' + ' page: ' + str(page_number // POSTINGS_PER_PAGE)
-                    + ' / ' + str(max_pages_per_city)
-                    + ', job posting: ' + str(i) + ' / ' + str(len(entries))
-                    )
-                title = get_job_title(entry)
-                company = get_company(entry)
-                #             city, state, zipcode, neighborhood = get_location_info(entry)
-                location, neighborhood = get_location_info(entry)
-                salary = get_salary(entry)
-                link = get_link(entry)
+            # # Loop over posts/entries
+            # entries = IndeedParser(job_query=job_title, location=location)
+            # for i, entry in enumerate(entries):
+            #     sys.stdout.write(
+            #         '\r' + ' page: ' + str(page_number // POSTINGS_PER_PAGE)
+            #         + ' / ' + str(max_pages_per_city)
+            #         + ', job posting: ' + str(i) + ' / ' + str(len(entries))
+            #         )
+            #     title = get_job_title(entry)
+            #     company = get_company(entry)
+            #     #             city, state, zipcode, neighborhood = get_location_info(entry)
+            #     location, neighborhood = get_location_info(entry)
+            #     salary = get_salary(entry)
+            #     link = get_link(entry)
 
-                # summary = get_job_summary(entry)
+#                 # summary = get_job_summary(entry)
 
-                job_page = 'https://www.indeed.com/viewjob?jk=' + link
-                description = get_job_description(job_page)
+                # job_page = 'https://www.indeed.com/viewjob?jk=' + link
+                # description = get_job_description(job_page)
 
-                # Append the new row with data scraped
-                num = (len(df) + 1)
-                df.loc[num] = [title, company, location, neighborhood, description,
-                               salary, link]
+                # # Append the new row with data scraped
+                # num = (len(df) + 1)
+                # df.loc[num] = [title, company, location, neighborhood, description,
+                #                salary, link]
 
-    return df
+    # return df
 
 
-def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, Any]:
+# Not covered: TODO
+def split_data(
+    data: pd.DataFrame, example_test_data_ratio: float
+) -> Dict[str, Any]:  # pragma: no cover
     """Node for splitting the classical Iris data set into training and test
     sets, each split into features and labels.
     The split ratio parameter is taken from conf/project/parameters.yml.

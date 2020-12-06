@@ -37,7 +37,8 @@ from kedro.pipeline import Pipeline, node
 from .nodes import split_data
 
 
-def create_pipeline(**kwargs):
+# Not covered: TODO
+def create_pipeline(**kwargs):  # pragma: no cover
     return Pipeline(
         [
             node(

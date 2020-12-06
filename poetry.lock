@@ -426,6 +426,14 @@ htmlsoup = ["beautifulsoup4"]
 source = ["Cython (>=0.29.7)"]
 
 [[package]]
+name = "makefun"
+version = "1.9.4"
+description = "Small library to dynamically create python functions."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "markupsafe"
 version = "1.1.1"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -736,6 +744,19 @@ attrs = ">=19.0"
 filelock = ">=3.0"
 mypy = {version = ">=0.700", markers = "python_version >= \"3.8\" and python_version < \"3.9\""}
 pytest = ">=3.5"
+
+[[package]]
+name = "pytest-steps"
+version = "1.7.3"
+description = "Create step-wise / incremental tests in pytest."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+makefun = ">=1.5"
+six = "*"
+wrapt = "*"
 
 [[package]]
 name = "python-dateutil"
@@ -1058,10 +1079,18 @@ category = "main"
 optional = false
 python-versions = "*"
 
+[[package]]
+name = "wrapt"
+version = "1.12.1"
+description = "Module for decorators, wrappers and monkey patching."
+category = "main"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.9"
-content-hash = "a3c51bfed5c52a3a865d10abb26c7b1c92876a0b410e038bfae4543043dc5875"
+content-hash = "dddaa78aeb5bfd76b68c6968a85736867b9215b34e65ba2b8b51f11e8ab56ee9"
 
 [metadata.files]
 anyconfig = [
@@ -1311,6 +1340,10 @@ lxml = [
     {file = "lxml-4.6.1-cp39-cp39-win32.whl", hash = "sha256:bb252f802f91f59767dcc559744e91efa9df532240a502befd874b54571417bd"},
     {file = "lxml-4.6.1-cp39-cp39-win_amd64.whl", hash = "sha256:7ecaef52fd9b9535ae5f01a1dd2651f6608e4ec9dc136fc4dfe7ebe3c3ddb230"},
     {file = "lxml-4.6.1.tar.gz", hash = "sha256:c152b2e93b639d1f36ec5a8ca24cde4a8eefb2b6b83668fcd8e83a67badcb367"},
+]
+makefun = [
+    {file = "makefun-1.9.4-py2.py3-none-any.whl", hash = "sha256:0d25e38c0b63170cfa0d1f7c6a7d43aba76d3aa75be04cd7070366b488080205"},
+    {file = "makefun-1.9.4.tar.gz", hash = "sha256:65234d5174316e2284e7e61a0ab2f2bfece88dbc0e14bd21e08db228462f503f"},
 ]
 markupsafe = [
     {file = "MarkupSafe-1.1.1-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:09027a7803a62ca78792ad89403b1b7a73a01c8cb65909cd876f7fcebd79b161"},
@@ -1583,6 +1616,10 @@ pytest-mock = [
 pytest-mypy = [
     {file = "pytest-mypy-0.8.0.tar.gz", hash = "sha256:63d418a4fea7d598ac40b659723c00804d16a251d90a5cfbca213eeba5aaf01c"},
     {file = "pytest_mypy-0.8.0-py3-none-any.whl", hash = "sha256:8d2112972c1debf087943f48963a0daf04f3424840aea0cf437cc97053b1b0ef"},
+]
+pytest-steps = [
+    {file = "pytest-steps-1.7.3.tar.gz", hash = "sha256:af7d63da256d5e512c227e206d182888715cc02d3dcc6c378b45446b3e917e7a"},
+    {file = "pytest_steps-1.7.3-py2.py3-none-any.whl", hash = "sha256:1ec336850dc63312cd6b318b65c04dc30065071760ffdeffb99aa247e9ad8e36"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
@@ -1895,4 +1932,7 @@ wasabi = [
 whichcraft = [
     {file = "whichcraft-0.6.1-py2.py3-none-any.whl", hash = "sha256:deda9266fbb22b8c64fd3ee45c050d61139cd87419765f588e37c8d23e236dd9"},
     {file = "whichcraft-0.6.1.tar.gz", hash = "sha256:acdbb91b63d6a15efbd6430d1d7b2d36e44a71697e93e19b7ded477afd9fce87"},
+]
+wrapt = [
+    {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},
 ]
