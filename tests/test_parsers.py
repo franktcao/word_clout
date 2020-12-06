@@ -168,3 +168,85 @@ class TestIndeedEntry:
 
         assert actual_location == expected_location
         yield
+
+    @staticmethod
+    def test_salary(mocker):
+        # === Arrange
+        expected = "100,000"
+        # Construct object to test that contains wrapped objects
+        mocked_entry = mocker.MagicMock(BeautifulSoup)
+        mocked_salary_snippet = mocker.MagicMock()
+        mocked_entry.find = lambda name, class_: mocked_salary_snippet
+
+        mocked_salary_info = mocker.MagicMock()
+        mocked_salary_info.text = "100,000"
+        mocked_salary_snippet.find = lambda name, class_: mocked_salary_info
+        object_under_test = IndeedEntry(mocked_entry)
+
+        # === Act
+        actual = object_under_test.salary
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_no_salary(mocker):
+        # === Arrange
+        expected = ""
+        # Construct object to test that contains wrapped objects
+        mocked_entry = mocker.MagicMock(BeautifulSoup)
+        mocked_entry.find = lambda name, class_: None
+
+        object_under_test = IndeedEntry(mocked_entry)
+
+        # === Act
+        actual = object_under_test.salary
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_job_summary(mocker):
+        # === Arrange
+        summary = "This is a job summary of the job that you will be applying for."
+        expected = summary
+
+        # Construct object to test that contains wrapped objects
+        mocked_entry = mocker.MagicMock(BeautifulSoup)
+        mocked_summary_info = mocker.MagicMock()
+        mocked_summary_info.text = expected
+        mocked_entry.find = lambda class_: mocked_summary_info
+
+        object_under_test = IndeedEntry(mocked_entry)
+
+        # === Act
+        actual = object_under_test.get_job_summary()
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_job_description(mocker):
+        # === Arrange
+        description = "This is the job description, a more thorough job summary."
+        expected = description
+
+        # Construct object to test that contains wrapped objects
+        mocked_entry = mocker.MagicMock(BeautifulSoup)
+
+        mocked_request = mocker.MagicMock()
+        mocker.patch("src.parsers.requests.get", return_value=mocked_request)
+
+        mocked_soup = mocker.MagicMock(BeautifulSoup)
+        mocked_description_info = mocker.MagicMock()
+        mocked_description_info.text = description
+        mocked_soup.find = lambda name, class_: mocked_description_info
+        mocker.patch("src.parsers.BeautifulSoup", return_value=mocked_soup)
+
+        object_under_test = IndeedEntry(mocked_entry)
+
+        # === Act
+        actual = object_under_test.get_job_description()
+
+        # === Assert
+        assert actual == expected

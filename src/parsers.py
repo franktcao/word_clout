@@ -68,14 +68,11 @@ class IndeedEntry:
     @property
     def salary(self) -> str:
         try:
-            return self.entry.find("nobr").text.strip()
+            salary_snippet = self.entry.find(name="div", class_="salarySnippet")
+            salary_info = salary_snippet.find(name="span", class_="salary")
+            return salary_info.text.strip()
         except AttributeError:
-            try:
-                salary_container = self.entry.find(name="div", class_="salarySnippet")
-                salary_temp = salary_container.find(name="span", class_="salary")
-                return salary_temp.text.strip()
-            except AttributeError:
-                return ""
+            return ""
 
     def get_job_summary(self) -> str:
         return self.entry.find(class_="summary").text.strip()
@@ -85,16 +82,17 @@ class IndeedEntry:
 
         page = requests.get(self.job_page)
         soup = BeautifulSoup(page.text, "lxml")
-        description = soup.find(name="div", class_="jobsearch-jobDescriptionText")
+        description_info = soup.find(name="div", class_="jobsearch-jobDescriptionText")
 
-        description = description.text.strip()
+        description = description_info.text.strip()
         description = description.replace("\n", " ")
         description = description.replace("\t", " ")
 
         return description
 
+    # Not covered: Simple setter
     @_company_location_info.setter
-    def _company_location_info(self, value):
+    def _company_location_info(self, value):  # pragma: no cover
         self.__company_location_info = value
 
 
