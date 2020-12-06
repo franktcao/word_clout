@@ -31,54 +31,49 @@ just for illustrating basic Kedro features.
 PLEASE DELETE THIS FILE ONCE YOU START WORKING ON YOUR OWN PROJECT!
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
 from ...parsers import IndeedParser
 
 
-# TODO
-def get_job_postings(job_title: str = "Data Scientist", locations: List[str] = ["Boston, MA"]) -> pd.DataFrame: # pragma: no cover
-    pass
-    # df = pd.DataFrame()
-    # # # Loop over cities
-    # for location in locations:
+def get_job_postings(
+    job_query: str = "Data Scientist", locations: Optional[List[str]] = None
+) -> pd.DataFrame:
+
+    locations = locations if locations else ["Boston, MA"]
+    df = pd.DataFrame(
+        # fmt: off
+        columns=["link", "job_title", "company_name", "location", "neighborhood", "salary", "description"]
+        # fmt: on
+    )
+
+    # Loop over locations
+    for location in locations:
+        parser = IndeedParser(job_query=job_query, location=location)
+        entries = parser.get_entries()
+        for i, entry in enumerate(entries):
+            # Extract values
+            link = entry.link
+            job_title = entry.job_title
+            company_name = entry.company_name
+            neighborhood = entry.neighborhood
+            location = entry.location
+            salary = entry.salary
+            description = entry.get_job_description()
+
+            # Append row
+            # fmt: off
+            df.loc[i] = [link, job_title, company_name, location, neighborhood, salary, description]
+            # fmt: on
+
     #     # Loop over pages
     #     for page_number in range(0, postings_per_city, POSTINGS_PER_PAGE):
     #         URL_page_start = '&start=' + str(page_number)
     #         URL = URL_base + URL_location + URL_page_start
 
-            # page = requests.get(URL)
-            # time.sleep(1)  # ensuring at least 1 second between page grabs
-            # soup = BeautifulSoup(page.text, 'lxml')
-
-            # # Loop over posts/entries
-            # entries = IndeedParser(job_query=job_title, location=location)
-            # for i, entry in enumerate(entries):
-            #     sys.stdout.write(
-            #         '\r' + ' page: ' + str(page_number // POSTINGS_PER_PAGE)
-            #         + ' / ' + str(max_pages_per_city)
-            #         + ', job posting: ' + str(i) + ' / ' + str(len(entries))
-            #         )
-            #     title = get_job_title(entry)
-            #     company = get_company(entry)
-            #     #             city, state, zipcode, neighborhood = get_location_info(entry)
-            #     location, neighborhood = get_location_info(entry)
-            #     salary = get_salary(entry)
-            #     link = get_link(entry)
-
-#                 # summary = get_job_summary(entry)
-
-                # job_page = 'https://www.indeed.com/viewjob?jk=' + link
-                # description = get_job_description(job_page)
-
-                # # Append the new row with data scraped
-                # num = (len(df) + 1)
-                # df.loc[num] = [title, company, location, neighborhood, description,
-                #                salary, link]
-
-    # return df
+    return df
 
 
 # Not covered: TODO

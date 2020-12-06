@@ -34,7 +34,7 @@ Delete this when you start working on your own Kedro project.
 
 from kedro.pipeline import Pipeline, node
 
-from .nodes import split_data
+from .nodes import get_job_postings
 
 
 # Not covered: TODO
@@ -42,14 +42,9 @@ def create_pipeline(**kwargs):  # pragma: no cover
     return Pipeline(
         [
             node(
-                func=split_data,
-                inputs=["example_iris_data", "params:example_test_data_ratio"],
-                outputs=dict(
-                    train_x="example_train_x",
-                    train_y="example_train_y",
-                    test_x="example_test_x",
-                    test_y="example_test_y",
-                ),
+                func=get_job_postings,
+                inputs=["params:job_query", "params:locations"],
+                outputs="indeed_data_scientist_postings",
             )
         ]
     )

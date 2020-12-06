@@ -41,11 +41,10 @@ class IndeedEntry:
 
     @property
     def company_name(self) -> str:
-        return self._company_info.find(name="company").text.strip()
+        return self.entry.find(class_="company").text.strip()
 
     @property
     def location(self) -> str:
-        # self._location = self._company_location_info.text.strip()
         if self._location == "DEFAULT LOCATION":
             return self._company_location_info.text.strip()
         else:
@@ -58,12 +57,12 @@ class IndeedEntry:
     @property
     def neighborhood(self) -> str:
         # Extract neighborhood info if it"s there
-        neighborhood_info = self._company_location_info.find(class_="span")
+        neighborhood_info = self._company_location_info.find(name="span")
         neighborhood = neighborhood_info.text if neighborhood_info else ""
 
         self.location = self.location.rstrip(f"({neighborhood})")
 
-        return neighborhood
+        return neighborhood.strip("()")
 
     @property
     def salary(self) -> str:
@@ -81,7 +80,7 @@ class IndeedEntry:
         time.sleep(1)  # Ensuring at least 1 second between page grabs
 
         page = requests.get(self.job_page)
-        soup = BeautifulSoup(page.text, "lxml")
+        soup = BeautifulSoup(page.text, features="lxml")
         description_info = soup.find(name="div", class_="jobsearch-jobDescriptionText")
 
         description = description_info.text.strip()
@@ -112,7 +111,7 @@ class IndeedParser:
 
     def get_entries(self, **kwargs: str) -> List[IndeedEntry]:
         page = requests.get(self.full_url)
-        parsed_page = BeautifulSoup(markup=page.text, parser="lxml")
+        parsed_page = BeautifulSoup(markup=page.text, features="lxml")
         kwargs = {**dict(name="div", class_="row"), **kwargs}
         entries = parsed_page.find_all(**kwargs)
         return [IndeedEntry(entry) for entry in entries]

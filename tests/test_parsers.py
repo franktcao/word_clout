@@ -109,22 +109,26 @@ class TestIndeedEntry:
 
         mocked_location = mocker.MagicMock()
         mocked_location.text = "Boston, MA (South End)"
+
         mocked_neighborhood = mocker.MagicMock()
         mocked_neighborhood.text = "South End"
-        mocked_location.find = lambda class_: mocked_neighborhood
 
-        mocked_location.class_ = mocked_neighborhood
+        mocked_location.find = lambda name: mocked_neighborhood
 
-        container = {"name": mocked_company_name, "class_": mocked_location}
         # Wrap mocked company location info
         mocked_company_info = mocker.MagicMock()
-        mocked_company_info.find = lambda **keys: container[
-            [key for key, val in keys.items()][0]
-        ]
+        mocked_company_info.find = lambda class_: mocked_location
+
+        container = {
+            "company": mocked_company_name,
+            "sjcl": mocked_company_info,
+        }
 
         # Construct object to test that contains wrapped objects
         mocked_entry = mocker.MagicMock(BeautifulSoup)
-        mocked_entry.find = lambda class_: mocked_company_info
+        mocked_entry.find = lambda **keys: container[
+            [val for key, val in keys.items()][0]
+        ]
         object_under_test = IndeedEntry(mocked_entry)
 
         return object_under_test
