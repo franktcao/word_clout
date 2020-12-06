@@ -37,13 +37,14 @@ from kedro.pipeline import Pipeline, node
 from .nodes import split_data
 
 
-def create_pipeline(**kwargs):
+# Not covered: TODO
+def create_pipeline(**kwargs):  # pragma: no cover
     return Pipeline(
         [
             node(
-                split_data,
-                ["example_iris_data", "params:example_test_data_ratio"],
-                dict(
+                func=split_data,
+                inputs=["example_iris_data", "params:example_test_data_ratio"],
+                outputs=dict(
                     train_x="example_train_x",
                     train_y="example_train_y",
                     test_x="example_test_x",

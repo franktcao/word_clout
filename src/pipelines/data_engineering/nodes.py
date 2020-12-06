@@ -36,7 +36,16 @@ from typing import Any, Dict
 import pandas as pd
 
 
-def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, Any]:
+# Not covered: TODO
+def get_job_postings() -> pd.DataFrame:  # pragma: no cover
+    df = pd.DataFrame()
+    return df
+
+
+# Not covered: TODO
+def split_data(
+    data: pd.DataFrame, example_test_data_ratio: float
+) -> Dict[str, Any]:  # pragma: no cover
     """Node for splitting the classical Iris data set into training and test
     sets, each split into features and labels.
     The split ratio parameter is taken from conf/project/parameters.yml.

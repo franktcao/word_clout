@@ -28,4 +28,8 @@ omit =
     */setup.py
     testing_framework/*
     .venv/*
+    kedro_cli.py
+    src/hooks.py
+    src/run.py
+
 
