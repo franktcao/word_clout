@@ -31,7 +31,7 @@ just for illustrating basic Kedro features.
 PLEASE DELETE THIS FILE ONCE YOU START WORKING ON YOUR OWN PROJECT!
 """
 
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 import pandas as pd
 
@@ -39,8 +39,23 @@ from ...parsers import IndeedParser
 
 
 def get_job_postings(
-    job_query: str = "Data Scientist", locations: Optional[List[str]] = None
+    job_query: str = "Data Scientist",
+    locations: Optional[List[str]] = None,
+    entries_per_location=100,
 ) -> pd.DataFrame:
+    """
+    Make a job search query for multiple locations and return dataframe of parsed job
+    search results.
+
+    :param job_query:
+        Job search query (e.g. "Data scientist", "senior software engineer", etc)
+    :param locations:
+        Collection of cities to make the job search query for
+    :param entries_per_location:
+        Desired number of entries per location
+    :return:
+        Dataframe with job title, company, and salary information
+    """
 
     locations = locations if locations else ["Boston, MA"]
     df = pd.DataFrame(
@@ -51,7 +66,11 @@ def get_job_postings(
 
     # Loop over locations
     for location in locations:
-        parser = IndeedParser(job_query=job_query, location=location, n_entries=100)
+        parser = IndeedParser(
+            job_query=job_query,
+            location=location,
+            desired_n_entries=entries_per_location,
+        )
         entries = parser.get_entries()
         for i, entry in enumerate(entries):
             # Extract values
@@ -69,48 +88,3 @@ def get_job_postings(
             # fmt: on
 
     return df
-
-
-# Not covered: TODO
-def split_data(
-    data: pd.DataFrame, example_test_data_ratio: float
-) -> Dict[str, Any]:  # pragma: no cover
-    """Node for splitting the classical Iris data set into training and test
-    sets, each split into features and labels.
-    The split ratio parameter is taken from conf/project/parameters.yml.
-    The data and the parameters will be loaded and provided to your function
-    automatically when the pipeline is executed and it is time to run this node.
-    """
-    data.columns = [
-        "sepal_length",
-        "sepal_width",
-        "petal_length",
-        "petal_width",
-        "target",
-    ]
-    classes = sorted(data["target"].unique())
-    # One-hot encoding for the target variable
-    data = pd.get_dummies(data, columns=["target"], prefix="", prefix_sep="")
-
-    # Shuffle all the data
-    data = data.sample(frac=1).reset_index(drop=True)
-
-    # Split to training and testing data
-    n = data.shape[0]
-    n_test = int(n * example_test_data_ratio)
-    training_data = data.iloc[n_test:, :].reset_index(drop=True)
-    test_data = data.iloc[:n_test, :].reset_index(drop=True)
-
-    # Split the data to features and labels
-    train_data_x = training_data.loc[:, "sepal_length":"petal_width"]
-    train_data_y = training_data[classes]
-    test_data_x = test_data.loc[:, "sepal_length":"petal_width"]
-    test_data_y = test_data[classes]
-
-    # When returning many variables, it is a good practice to give them names:
-    return dict(
-        train_x=train_data_x,
-        train_y=train_data_y,
-        test_x=test_data_x,
-        test_y=test_data_y,
-    )

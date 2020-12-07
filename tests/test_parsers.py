@@ -1,7 +1,6 @@
 import pytest
-from pytest_steps import test_steps
-
 from bs4 import BeautifulSoup
+from pytest_steps import test_steps
 
 from src.parsers import IndeedParser, IndeedEntry
 
