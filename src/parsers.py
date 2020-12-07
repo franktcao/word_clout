@@ -12,6 +12,11 @@ class IndeedEntry:
     _url_description_base = "https://www.indeed.com/viewjob?jk="
 
     def __init__(self, entry: bs4.element.Tag):
+        """
+        Initiate an entry and default location.
+
+        :param entry:
+        """
         self.entry = entry
         self._location = "DEFAULT LOCATION"
 
@@ -104,6 +109,8 @@ class IndeedEntry:
 
 
 class IndeedParser:
+    """Make an Indeed job search query and parse search results pages."""
+
     url_base = "https://www.indeed.com/jobs?"
 
     def __init__(self, *, job_query: str, location: str, desired_n_entries=10) -> None:
