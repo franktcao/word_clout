@@ -51,7 +51,7 @@ def get_job_postings(
 
     # Loop over locations
     for location in locations:
-        parser = IndeedParser(job_query=job_query, location=location)
+        parser = IndeedParser(job_query=job_query, location=location, n_entries=100)
         entries = parser.get_entries()
         for i, entry in enumerate(entries):
             # Extract values
@@ -67,11 +67,6 @@ def get_job_postings(
             # fmt: off
             df.loc[i] = [link, job_title, company_name, location, neighborhood, salary, description]
             # fmt: on
-
-    #     # Loop over pages
-    #     for page_number in range(0, postings_per_city, POSTINGS_PER_PAGE):
-    #         URL_page_start = '&start=' + str(page_number)
-    #         URL = URL_base + URL_location + URL_page_start
 
     return df
 

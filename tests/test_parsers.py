@@ -11,7 +11,9 @@ class TestIndeedParser:
     @pytest.fixture
     def object_under_test():
         """Instantiate object to test."""
-        return IndeedParser(job_query="Data Scientist", location="Boston, MA")
+        return IndeedParser(
+            job_query="Data Scientist", location="Boston, MA", desired_n_entries=1
+        )
 
     def test_full_url(self, object_under_test: IndeedParser):
         """Assert that full URL is constructed as expected."""
