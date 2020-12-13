@@ -17,7 +17,6 @@ class TestGetJobPostings:
                 "link": 30 * ["some_link"],
                 "job_title": 30 * ["some_title"],
                 "company_name": 30 * ["some_company"],
-                "neighborhood": 30 * ["some_neighborhood"],
                 "location": 30 * ["some_location"],
                 "salary": 30 * ["some_salary"],
                 "description": 30 * ["some_description"],
@@ -29,7 +28,6 @@ class TestGetJobPostings:
         mocked_entry_instance.link = "some_link"
         mocked_entry_instance.job_title = "some_title"
         mocked_entry_instance.company_name = "some_company"
-        mocked_entry_instance.neighborhood = "some_neighborhood"
         mocked_entry_instance.location = "some_location"
         mocked_entry_instance.salary = "some_salary"
         mocked_entry_instance.get_job_description.return_value = "some_description"

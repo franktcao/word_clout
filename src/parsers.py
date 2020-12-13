@@ -18,7 +18,6 @@ class IndeedEntry:
         :param entry:
         """
         self.entry = entry
-        self._location = "DEFAULT LOCATION"
 
     @property
     def link(self) -> str:
@@ -57,27 +56,8 @@ class IndeedEntry:
 
     @property
     def location(self) -> str:
-        """Return job location.:w"""
-        if self._location == "DEFAULT LOCATION":
-            return self._company_location_info.text.strip()
-        else:
-            return self._location
-
-    @location.setter
-    def location(self, location: str) -> None:
-        """Set location value."""
-        self._location = location
-
-    @property
-    def neighborhood(self) -> str:
-        """Return neighborhood from location if provided."""
-        # Extract neighborhood info if it"s there
-        neighborhood_info = self._company_location_info.find(name="span")
-        neighborhood = neighborhood_info.text if neighborhood_info else ""
-
-        self.location = self.location.rstrip(f"({neighborhood})")
-
-        return neighborhood.strip("()")
+        """Return job location."""
+        return self._company_location_info.text.strip()
 
     @property
     def salary(self) -> str:

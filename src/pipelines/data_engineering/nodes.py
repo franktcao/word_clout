@@ -60,7 +60,7 @@ def get_job_postings(
     locations = locations if locations else ["Boston, MA"]
     df = pd.DataFrame(
         # fmt: off
-        columns=["link", "job_title", "company_name", "location", "neighborhood", "salary", "description"]
+        columns=["link", "job_title", "company_name", "location", "salary", "description"]
         # fmt: on
     )
 
@@ -78,14 +78,13 @@ def get_job_postings(
             link = entry.link
             job_title = entry.job_title
             company_name = entry.company_name
-            neighborhood = entry.neighborhood
             location = entry.location
             salary = entry.salary
             description = entry.get_job_description()
 
             # Append row
             # fmt: off
-            df_location.loc[i] = [link, job_title, company_name, location, neighborhood, salary, description]
+            df_location.loc[i] = [link, job_title, company_name, location, salary, description]
             # fmt: on
         df = pd.concat([df, df_location], ignore_index=True)
 
