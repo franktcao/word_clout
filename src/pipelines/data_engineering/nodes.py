@@ -72,6 +72,7 @@ def get_job_postings(
             desired_n_entries=entries_per_location,
         )
         entries = parser.get_entries()
+        df_location = pd.DataFrame(columns=df.columns)
         for i, entry in enumerate(entries):
             # Extract values
             link = entry.link
@@ -84,7 +85,8 @@ def get_job_postings(
 
             # Append row
             # fmt: off
-            df.loc[i] = [link, job_title, company_name, location, neighborhood, salary, description]
+            df_location.loc[i] = [link, job_title, company_name, location, neighborhood, salary, description]
             # fmt: on
+        df = pd.concat([df, df_location], ignore_index=True)
 
     return df
