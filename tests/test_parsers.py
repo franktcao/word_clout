@@ -1,6 +1,5 @@
 import pytest
 from bs4 import BeautifulSoup
-from pytest_steps import test_steps
 
 from src.parsers import IndeedParser, IndeedEntry
 
@@ -111,11 +110,6 @@ class TestIndeedEntry:
         mocked_location = mocker.MagicMock()
         mocked_location.text = "Boston, MA (South End)"
 
-        mocked_neighborhood = mocker.MagicMock()
-        mocked_neighborhood.text = "South End"
-
-        mocked_location.find = lambda name: mocked_neighborhood
-
         # Wrap mocked company location info
         mocked_company_info = mocker.MagicMock()
         mocked_company_info.find = lambda class_: mocked_location
@@ -157,24 +151,6 @@ class TestIndeedEntry:
         assert actual == expected
 
     @staticmethod
-    @test_steps("neighborhood", "updated_location")
-    def test_neighborhood(object_under_test_company_info):
-        # === Arrange
-        expected_neighborhood = "South End"
-        expected_location = "Boston, MA"
-
-        # === Act
-        actual_neighborhood = object_under_test_company_info.neighborhood
-        actual_location = object_under_test_company_info.location
-
-        # === Assert
-        assert actual_neighborhood == expected_neighborhood
-        yield
-
-        assert actual_location == expected_location
-        yield
-
-    @staticmethod
     def test_salary(mocker):
         # === Arrange
         expected = "100,000"
@@ -197,7 +173,7 @@ class TestIndeedEntry:
     @staticmethod
     def test_no_salary(mocker):
         # === Arrange
-        expected = ""
+        expected = None
         # Construct object to test that contains wrapped objects
         mocked_entry = mocker.MagicMock(BeautifulSoup)
         mocked_entry.find = lambda name, class_: None

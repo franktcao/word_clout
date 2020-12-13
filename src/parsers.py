@@ -1,5 +1,5 @@
 import time
-from typing import List
+from typing import List, Optional
 
 import bs4
 import requests
@@ -18,7 +18,6 @@ class IndeedEntry:
         :param entry:
         """
         self.entry = entry
-        self._location = "DEFAULT LOCATION"
 
     @property
     def link(self) -> str:
@@ -57,37 +56,18 @@ class IndeedEntry:
 
     @property
     def location(self) -> str:
-        """Return job location.:w"""
-        if self._location == "DEFAULT LOCATION":
-            return self._company_location_info.text.strip()
-        else:
-            return self._location
-
-    @location.setter
-    def location(self, location: str) -> None:
-        """Set location value."""
-        self._location = location
+        """Return job location."""
+        return self._company_location_info.text.strip()
 
     @property
-    def neighborhood(self) -> str:
-        """Return neighborhood from location if provided."""
-        # Extract neighborhood info if it"s there
-        neighborhood_info = self._company_location_info.find(name="span")
-        neighborhood = neighborhood_info.text if neighborhood_info else ""
-
-        self.location = self.location.rstrip(f"({neighborhood})")
-
-        return neighborhood.strip("()")
-
-    @property
-    def salary(self) -> str:
+    def salary(self) -> Optional[str]:
         """Return salary from if provided."""
         try:
             salary_snippet = self.entry.find(name="div", class_="salarySnippet")
             salary_info = salary_snippet.find(name="span", class_="salary")
             return salary_info.text.strip()
         except AttributeError:
-            return ""
+            return None
 
     def get_job_summary(self) -> str:
         """Return job summary from search results page."""
