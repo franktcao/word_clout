@@ -1,0 +1,6 @@
+context_path: src.run.ProjectContext
+project_name: "src"
+project_version: "0.16.6"
+package_name: "src"
+hooks:
+  - src.hooks.project_hooks
