@@ -31,57 +31,62 @@ just for illustrating basic Kedro features.
 PLEASE DELETE THIS FILE ONCE YOU START WORKING ON YOUR OWN PROJECT!
 """
 
-from typing import Any, Dict
+from typing import List, Optional
 
 import pandas as pd
 
-
-# Not covered: TODO
-def get_job_postings() -> pd.DataFrame:  # pragma: no cover
-    df = pd.DataFrame()
-    return df
+from ...parsers import IndeedParser
 
 
-# Not covered: TODO
-def split_data(
-    data: pd.DataFrame, example_test_data_ratio: float
-) -> Dict[str, Any]:  # pragma: no cover
-    """Node for splitting the classical Iris data set into training and test
-    sets, each split into features and labels.
-    The split ratio parameter is taken from conf/project/parameters.yml.
-    The data and the parameters will be loaded and provided to your function
-    automatically when the pipeline is executed and it is time to run this node.
+def get_job_postings(
+    job_query: str = "Data Scientist",
+    locations: Optional[List[str]] = None,
+    entries_per_location=100,
+) -> pd.DataFrame:
     """
-    data.columns = [
-        "sepal_length",
-        "sepal_width",
-        "petal_length",
-        "petal_width",
-        "target",
-    ]
-    classes = sorted(data["target"].unique())
-    # One-hot encoding for the target variable
-    data = pd.get_dummies(data, columns=["target"], prefix="", prefix_sep="")
+    Make a job search query for multiple locations and return dataframe of parsed job
+    search results.
 
-    # Shuffle all the data
-    data = data.sample(frac=1).reset_index(drop=True)
+    :param job_query:
+        Job search query (e.g. "Data scientist", "senior software engineer", etc)
+    :param locations:
+        Collection of cities to make the job search query for
+    :param entries_per_location:
+        Desired number of entries per location
+    :return:
+        Dataframe with job title, company, and salary information
+    """
 
-    # Split to training and testing data
-    n = data.shape[0]
-    n_test = int(n * example_test_data_ratio)
-    training_data = data.iloc[n_test:, :].reset_index(drop=True)
-    test_data = data.iloc[:n_test, :].reset_index(drop=True)
-
-    # Split the data to features and labels
-    train_data_x = training_data.loc[:, "sepal_length":"petal_width"]
-    train_data_y = training_data[classes]
-    test_data_x = test_data.loc[:, "sepal_length":"petal_width"]
-    test_data_y = test_data[classes]
-
-    # When returning many variables, it is a good practice to give them names:
-    return dict(
-        train_x=train_data_x,
-        train_y=train_data_y,
-        test_x=test_data_x,
-        test_y=test_data_y,
+    locations = locations if locations else ["Boston, MA"]
+    df = pd.DataFrame(
+        # fmt: off
+        columns=["link", "job_title", "company_name", "location", "neighborhood", "salary", "description"]
+        # fmt: on
     )
+
+    # Loop over locations
+    for location in locations:
+        parser = IndeedParser(
+            job_query=job_query,
+            location=location,
+            desired_n_entries=entries_per_location,
+        )
+        entries = parser.get_entries()
+        df_location = pd.DataFrame(columns=df.columns)
+        for i, entry in enumerate(entries):
+            # Extract values
+            link = entry.link
+            job_title = entry.job_title
+            company_name = entry.company_name
+            neighborhood = entry.neighborhood
+            location = entry.location
+            salary = entry.salary
+            description = entry.get_job_description()
+
+            # Append row
+            # fmt: off
+            df_location.loc[i] = [link, job_title, company_name, location, neighborhood, salary, description]
+            # fmt: on
+        df = pd.concat([df, df_location], ignore_index=True)
+
+    return df
