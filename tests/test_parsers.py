@@ -173,7 +173,7 @@ class TestIndeedEntry:
     @staticmethod
     def test_no_salary(mocker):
         # === Arrange
-        expected = ""
+        expected = None
         # Construct object to test that contains wrapped objects
         mocked_entry = mocker.MagicMock(BeautifulSoup)
         mocked_entry.find = lambda name, class_: None

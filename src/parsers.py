@@ -1,5 +1,5 @@
 import time
-from typing import List
+from typing import List, Optional
 
 import bs4
 import requests
@@ -60,14 +60,14 @@ class IndeedEntry:
         return self._company_location_info.text.strip()
 
     @property
-    def salary(self) -> str:
+    def salary(self) -> Optional[str]:
         """Return salary from if provided."""
         try:
             salary_snippet = self.entry.find(name="div", class_="salarySnippet")
             salary_info = salary_snippet.find(name="span", class_="salary")
             return salary_info.text.strip()
         except AttributeError:
-            return ""
+            return None
 
     def get_job_summary(self) -> str:
         """Return job summary from search results page."""
