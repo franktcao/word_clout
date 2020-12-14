@@ -4,8 +4,9 @@ import pandas as pd
 
 # Not covered: Essentially a script over other unit tested functions
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:  # pragma: no cover
-    """Parse location information to append city, state, zip code, and neighborhood
-    columns.
+    """Parse
+    * location information to append city, state, zip code, and neighborhood columns
+    * salary information to append minimum and maximum annual salary in dollars
 
     :param df:
         Dataframe with "location" column
@@ -14,12 +15,84 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:  # pragma: no cover
         finer-detailed columns
     """
     result = expand_location(df)
+    result = expand_salary(result)
     return result
 
 
-def expand_location(df: pd.DataFrame) -> pd.DataFrame:
+def expand_salary(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Replace "location" column with "city", "state", "zip_code", and "neighborhood"
+    Replace "salary" column with "min_annual_salary_$" and "max_annual_salary_$" columns
+    extracted from it.
+
+    :param df:
+        Dataframe with "salary" column
+    :return:
+        Dataframe with "salary" column dropped and "min_annual_salary_$" and
+        "max_annual_salary_$" columns appended
+    """
+    df["parsed_salary"] = df.apply(
+        func=lambda row: parse_salary(row["salary"]), axis=1
+    )
+    # Concatenate original columns with horizontal/column exploded column of arrays
+    df = df.apply(
+        func=lambda row: pd.concat(
+            [row, pd.Series([e for e in row["parsed_salary"]])], axis=0
+        ),
+        axis=1,
+    )
+    # Rename the default-named exploded columns
+    df.rename(
+        columns={0: "annual_salary_min_$", 1: "annual_salary_max_$"}, inplace=True
+    )
+
+    return df.drop(["salary", "parsed_salary"], axis=1)
+
+
+def parse_salary(salary: str) -> List[float]:
+    """Parse salary information into minimum and maximum annual salary in dollars.
+
+    :param salary:
+        Salary that contains a value or range and a rate
+    :return:
+        Minimum and maximum annual salary in dollars
+    """
+    salary_split = salary.split()
+    splitter = [
+        i for i, token in enumerate(salary_split) if token == "a" or token == "an"
+    ].pop()
+    range_ = " ".join(salary_split[:splitter])
+    rate = " ".join(salary_split[splitter:])
+    rate_to_annual = {
+        "a year": 1,
+        "an hour": 2_080,
+    }
+    range_split = range_.split("-")
+    salary_min, salary_max = (
+        range_split if len(range_split) > 1
+        else (range_split[0], range_split[0])
+    )
+
+    annual_rate = rate_to_annual[rate]
+    annual_salary_min = float(_remove_human_readables(salary_min)) * annual_rate
+    annual_salary_max = float(_remove_human_readables(salary_max)) * annual_rate
+    return [annual_salary_min, annual_salary_max]
+
+
+def _remove_human_readables(token: str) -> str:
+    """Remove human readable characters from a string. Example: "$1,000" -> "1000"
+
+    :param token:
+        Token to remove human readable characters
+    :return:
+        Token without human readable characters (to cast to numeric type)
+    """
+    # Translate bad characters to empty ones
+    translation = str.maketrans({"$": "", ",": ""})
+    return token.translate(translation)
+
+
+def expand_location(df: pd.DataFrame) -> pd.DataFrame:
+    """Replace "location" column with "city", "state", "zip_code", and "neighborhood"
     columns extracted from it.
 
     :param df:

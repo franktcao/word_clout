@@ -1,20 +1,108 @@
 import pandas as pd
-from src.pipelines.data_science.nodes import expand_location, parse_location
+from src.pipelines.data_science.nodes import (
+    expand_location,
+    parse_location,
+    expand_salary,
+    parse_salary,
+)
+
+
+class TestExpandSalary:
+    @staticmethod
+    def test_typical():
+        """Assert that the dataframe is transformed as expected."""
+        # === Arrange
+        df_under_test = pd.DataFrame(
+            {
+                "company_name": 10 * ["Aperture Laboratories"],
+                "job_title": (5 * ["Data Scientist"]) + (5 * ["Data Specialist"]),
+                "salary": (5 * ["$90,000 - $130,000 a year"]) + (5 * ["$45 an hour"]),
+            }
+        )
+        expected = pd.DataFrame(
+            {
+                "company_name": 10 * ["Aperture Laboratories"],
+                "job_title": (5 * ["Data Scientist"]) + (5 * ["Data Specialist"]),
+                "annual_salary_min_$": 5 * [90_000] + 5 * [45 * 2_080],
+                "annual_salary_max_$": 5 * [130_000] + 5 * [45 * 2_080],
+            }
+        )
+        # === Act
+        actual = expand_salary(df_under_test)
+
+        # === Assert
+        pd.testing.assert_frame_equal(actual, expected, check_dtype=False)
+
+
+class TestParseSalary:
+    @staticmethod
+    def test_typical_yearly():
+        """Assert expected return for typical yearly, ranged input."""
+        # === Arrange
+        salary_to_test = "$90,000 - $130,000 a year"
+        expected = [90_000, 130_000]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_typical_hourly():
+        """Assert expected return for typical hourly, ranged input."""
+        # === Arrange
+        salary_to_test = "$30 - $70 an hour"
+        expected = [30 * 2_080, 70 * 2_080]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_single_value_yearly():
+        """Assert expected return for typical yearly, single input."""
+        # === Arrange
+        salary_to_test = "$106,700 a year"
+        expected = [106_700, 106_700]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_single_value_hourly():
+        """Assert expected return for typical hourly, single input."""
+        # === Arrange
+        salary_to_test = "$45 an hour"
+        expected_value = 45 * 2_080
+        expected = 2 * [expected_value]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
 
 
 class TestExpandLocation:
     @staticmethod
     def test_typical():
+        """Assert that the dataframe is transformed as expected."""
         # === Arrange
         df_under_test = pd.DataFrame(
             {
-                "comapny_name": 10 * ["Aperture Laboratories"],
+                "company_name": 10 * ["Aperture Laboratories"],
                 "location": 10 * ["Boston, Ma 02118 (South End area)"],
             }
         )
         expected = pd.DataFrame(
             {
-                "comapny_name": 10 * ["Aperture Laboratories"],
+                "company_name": 10 * ["Aperture Laboratories"],
                 "city": 10 * ["Boston"],
                 "state": 10 * ["Ma"],
                 "zip_code": 10 * ["02118"],
