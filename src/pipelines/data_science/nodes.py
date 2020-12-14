@@ -69,7 +69,7 @@ def parse_salary(salary: str) -> List[float]:
     range_split = range_.split("-")
     salary_min, salary_max = (
         range_split if len(range_split) > 1
-        else range_split[0], range_split[0]
+        else (range_split[0], range_split[0])
     )
 
     annual_rate = rate_to_annual[rate]

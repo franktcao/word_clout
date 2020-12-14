@@ -1,5 +1,71 @@
 import pandas as pd
-from src.pipelines.data_science.nodes import expand_location, parse_location
+from src.pipelines.data_science.nodes import (
+    expand_location,
+    parse_location,
+    expand_salary,
+    parse_salary
+)
+
+
+class TestExpandSalary:
+    @staticmethod
+    def test_typical():
+        pass
+
+
+class TestParseSalary:
+    @staticmethod
+    def test_typical_yearly():
+        """Assert expected return for typical yearly, ranged input."""
+        # === Arrange
+        salary_to_test = "$90,000 - $130,000 a year"
+        expected = [90_000, 130_000]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_typical_hourly():
+        """Assert expected return for typical hourly, ranged input."""
+        # === Arrange
+        salary_to_test = "$30 - $70 an hour"
+        expected = [30 * 2_080, 70 * 2_080]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_single_value_yearly():
+        """Assert expected return for typical yearly, single input."""
+        # === Arrange
+        salary_to_test = "$106,700 a year"
+        expected = [106_700, 106_700]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_single_value_hourly():
+        """Assert expected return for typical hourly, single input."""
+        # === Arrange
+        salary_to_test = "$45 an hour"
+        expected_value = 45 * 2_080
+        expected = 2 * [expected_value]
+
+        # === Act
+        actual = parse_salary(salary_to_test)
+
+        # === Assert
+        assert actual == expected
 
 
 class TestExpandLocation:
