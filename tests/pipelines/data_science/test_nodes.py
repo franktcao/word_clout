@@ -1,4 +1,31 @@
-from src.pipelines.data_science.nodes import parse_location
+import pandas as pd
+from src.pipelines.data_science.nodes import expand_location, parse_location
+
+
+class TestExpandLocation:
+    @staticmethod
+    def test_typical():
+        # === Arrange
+        df_under_test = pd.DataFrame(
+            {
+                "comapny_name": 10 * ["Aperture Laboratories"],
+                "location": 10 * ["Boston, Ma 02118 (South End area)"],
+            }
+        )
+        expected = pd.DataFrame(
+            {
+                "comapny_name": 10 * ["Aperture Laboratories"],
+                "city": 10 * ["Boston"],
+                "state": 10 * ["Ma"],
+                "zip_code": 10 * ["02118"],
+                "neighborhood": 10 * ["South End"],
+            }
+        )
+        # === Act
+        actual = expand_location(df_under_test)
+
+        # === Assert
+        pd.testing.assert_frame_equal(actual, expected)
 
 
 class TestParseLocation:
