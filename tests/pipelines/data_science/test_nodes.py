@@ -3,14 +3,35 @@ from src.pipelines.data_science.nodes import (
     expand_location,
     parse_location,
     expand_salary,
-    parse_salary
+    parse_salary,
 )
 
 
 class TestExpandSalary:
     @staticmethod
     def test_typical():
-        pass
+        """Assert that the dataframe is transformed as expected."""
+        # === Arrange
+        df_under_test = pd.DataFrame(
+            {
+                "company_name": 10 * ["Aperture Laboratories"],
+                "job_title": (5 * ["Data Scientist"]) + (5 * ["Data Specialist"]),
+                "salary": (5 * ["$90,000 - $130,000 a year"]) + (5 * ["$45 an hour"]),
+            }
+        )
+        expected = pd.DataFrame(
+            {
+                "company_name": 10 * ["Aperture Laboratories"],
+                "job_title": (5 * ["Data Scientist"]) + (5 * ["Data Specialist"]),
+                "annual_salary_min_$": 5 * [90_000] + 5 * [45 * 2_080],
+                "annual_salary_max_$": 5 * [130_000] + 5 * [45 * 2_080],
+            }
+        )
+        # === Act
+        actual = expand_salary(df_under_test)
+
+        # === Assert
+        pd.testing.assert_frame_equal(actual, expected, check_dtype=False)
 
 
 class TestParseSalary:
@@ -71,16 +92,17 @@ class TestParseSalary:
 class TestExpandLocation:
     @staticmethod
     def test_typical():
+        """Assert that the dataframe is transformed as expected."""
         # === Arrange
         df_under_test = pd.DataFrame(
             {
-                "comapny_name": 10 * ["Aperture Laboratories"],
+                "company_name": 10 * ["Aperture Laboratories"],
                 "location": 10 * ["Boston, Ma 02118 (South End area)"],
             }
         )
         expected = pd.DataFrame(
             {
-                "comapny_name": 10 * ["Aperture Laboratories"],
+                "company_name": 10 * ["Aperture Laboratories"],
                 "city": 10 * ["Boston"],
                 "state": 10 * ["Ma"],
                 "zip_code": 10 * ["02118"],
