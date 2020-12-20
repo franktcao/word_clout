@@ -30,22 +30,53 @@ def expand_salary(df: pd.DataFrame) -> pd.DataFrame:
         Dataframe with "salary" column dropped and "min_annual_salary_$" and
         "max_annual_salary_$" columns appended
     """
-    df["parsed_salary"] = df.apply(
-        func=lambda row: parse_salary(row["salary"]), axis=1
+    original_cols = df.columns
+    salary = "salary"
+    replacement_columns = ["annual_salary_min_$", "annual_salary_max_$"]
+    columns_to_expanded = {salary: replacement_columns}
+
+    # Parse salary information into list
+    df["parsed_salary"] = df[df[salary].notnull()].apply(
+        func=lambda row: parse_salary(row[salary]), axis=1
     )
-    # Concatenate original columns with horizontal/column exploded column of arrays
-    df = df.apply(
-        func=lambda row: pd.concat(
-            [row, pd.Series([e for e in row["parsed_salary"]])], axis=0
-        ),
-        axis=1,
-    )
-    # Rename the default-named exploded columns
-    df.rename(
-        columns={0: "annual_salary_min_$", 1: "annual_salary_max_$"}, inplace=True
+    # Explode (non-null) parsed list into its own columns
+    df_expanded_salary = (
+        df[["link", salary, "parsed_salary"]][df[salary].notnull()]
+        .apply(
+            func=lambda row: pd.concat(
+                [row, pd.Series([e for e in row["parsed_salary"]])], axis=0
+            ),
+            axis=1,
+        )
+        .drop([salary, "parsed_salary"], axis=1)
+        # Rename the default-named exploded columns
+        .rename(columns={i: col for i, col in enumerate(replacement_columns)})
     )
 
-    return df.drop(["salary", "parsed_salary"], axis=1)
+    # Join non-null columns back in on unique identifier
+    df = pd.merge(df, df_expanded_salary, how="outer", on="link")
+
+    new_columns = _replace_expanded_columns(original_cols, columns_to_expanded)
+    return df[new_columns]
+
+
+def _replace_expanded_columns(original_cols, mapping):
+    """Expand columns in `original_cols` which are in `mapping` with mapped values.
+
+    :param original_cols:
+        Original columns with subset of columns to expand
+    :param mapping:
+        Mapping from original columns to expanded columns
+    :return:
+        Expanded column names
+    """
+    new_columns = []
+    for col in original_cols:
+        if col in mapping:
+            new_columns.extend(mapping[col])
+        else:
+            new_columns.append(col)
+    return new_columns
 
 
 def parse_salary(salary: str) -> List[float]:
@@ -64,13 +95,18 @@ def parse_salary(salary: str) -> List[float]:
     rate = " ".join(salary_split[splitter:])
     rate_to_annual = {
         "a year": 1,
+        "a month": 12,
+        "a week": 52,
+        "a day": 260,
         "an hour": 2_080,
     }
     range_split = range_.split("-")
     salary_min, salary_max = (
-        range_split if len(range_split) > 1
-        else (range_split[0], range_split[0])
+        range_split if len(range_split) > 1 else (range_split[0], range_split[0])
     )
+    if "Up to" in salary_min:
+        salary_min = "0"
+        salary_max = salary_max.replace("Up to ", "")
 
     annual_rate = rate_to_annual[rate]
     annual_salary_min = float(_remove_human_readables(salary_min)) * annual_rate
@@ -101,23 +137,30 @@ def expand_location(df: pd.DataFrame) -> pd.DataFrame:
         Dataframe with "location" column dropped and "city", "state", "zip_code" and
         "neighborhood" columns appended
     """
+    original_cols = df.columns
+    location = "location"
+    replacement_columns = ["city", "state", "zip_code", "neighborhood"]
+    columns_to_expanded = {location: replacement_columns}
+
     # Append a column of the parsed location
-    df["parsed_location_info"] = df.apply(
-        func=lambda row: parse_location(row["location"]), axis=1
-    )
-    # Concatenate original columns with horizontal/column exploded column of arrays
-    df = df.apply(
-        func=lambda row: pd.concat(
-            [row, pd.Series([e for e in row["parsed_location_info"]])], axis=0
-        ),
-        axis=1,
-    )
-    # Rename the default-named exploded columns
-    df.rename(
-        columns={0: "city", 1: "state", 2: "zip_code", 3: "neighborhood"}, inplace=True
+    df["parsed_location_info"] = df[df.columns].apply(
+        func=lambda row: parse_location(row[location]), axis=1
     )
 
-    return df.drop(["location", "parsed_location_info"], axis=1)
+    # Explode parsed list into its own columns
+    df = (
+        df[df.columns].apply(
+            func=lambda row: pd.concat(
+                [row, pd.Series([e for e in row["parsed_location_info"]])], axis=0
+            ),
+            axis=1,
+        )
+        # Rename the default-named exploded columns
+        .rename(columns={i: col for i, col in enumerate(replacement_columns)})
+    )
+
+    new_columns = _replace_expanded_columns(original_cols, mapping=columns_to_expanded)
+    return df[new_columns]
 
 
 def parse_location(location: str) -> List[str]:
