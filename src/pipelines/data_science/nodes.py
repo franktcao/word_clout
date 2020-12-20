@@ -56,11 +56,11 @@ def expand_salary(df: pd.DataFrame) -> pd.DataFrame:
     # Join non-null columns back in on unique identifier
     df = pd.merge(df, df_expanded_salary, how="outer", on="link")
 
-    new_columns = replace_expanded_columns(original_cols, columns_to_expanded)
+    new_columns = _replace_expanded_columns(original_cols, columns_to_expanded)
     return df[new_columns]
 
 
-def replace_expanded_columns(original_cols, mapping):
+def _replace_expanded_columns(original_cols, mapping):
     """Expand columns in `original_cols` which are in `mapping` with mapped values.
 
     :param original_cols:
@@ -95,6 +95,9 @@ def parse_salary(salary: str) -> List[float]:
     rate = " ".join(salary_split[splitter:])
     rate_to_annual = {
         "a year": 1,
+        "a month": 12,
+        "a week": 52,
+        "a day": 260,
         "an hour": 2_080,
     }
     range_split = range_.split("-")
@@ -156,7 +159,7 @@ def expand_location(df: pd.DataFrame) -> pd.DataFrame:
         .rename(columns={i: col for i, col in enumerate(replacement_columns)})
     )
 
-    new_columns = replace_expanded_columns(original_cols, mapping=columns_to_expanded)
+    new_columns = _replace_expanded_columns(original_cols, mapping=columns_to_expanded)
     return df[new_columns]
 
 
