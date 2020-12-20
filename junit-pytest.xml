@@ -1,1 +1,85 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="34" time="7.225" timestamp="2020-12-20T18:23:56.989803" hostname="8e9e484dcbb3"><testcase classname="tests.__init__" name="BLACK" file="tests/__init__.py" line="-1" time="0.558" /><testcase classname="tests.conftest" name="BLACK" file="tests/conftest.py" line="-1" time="0.431" /><testcase classname="tests.test_parsers" name="BLACK" file="tests/test_parsers.py" line="-1" time="0.478" /><testcase classname="tests.test_parsers.TestIndeedParser" name="test_full_url" file="tests/test_parsers.py" line="15" time="0.001" /><testcase classname="tests.test_parsers.TestIndeedParser" name="test_get_entries_count" file="tests/test_parsers.py" line="29" time="0.011" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_link" file="tests/test_parsers.py" line="60" time="0.002" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_page" file="tests/test_parsers.py" line="70" time="0.002" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_title" file="tests/test_parsers.py" line="80" time="0.004" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_company_name" file="tests/test_parsers.py" line="130" time="0.004" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_location" file="tests/test_parsers.py" line="141" time="0.005" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_salary" file="tests/test_parsers.py" line="152" time="0.004" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_no_salary" file="tests/test_parsers.py" line="172" time="0.002" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_summary" file="tests/test_parsers.py" line="188" time="0.002" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_description" file="tests/test_parsers.py" line="208" time="1.015" /><testcase classname="tests.test_run" name="BLACK" file="tests/test_run.py" line="-1" time="0.437" /><testcase classname="tests.test_run.TestProjectContext" name="test_project_name" file="tests/test_run.py" line="54" time="0.057" /><testcase classname="tests.test_run.TestProjectContext" name="test_project_version" file="tests/test_run.py" line="57" time="0.042" /><testcase classname="tests.pipelines.__init__" name="BLACK" file="tests/pipelines/__init__.py" line="-1" time="0.411" /><testcase classname="tests.pipelines.data_engineering.__init__" name="BLACK" file="tests/pipelines/data_engineering/__init__.py" line="-1" time="0.407" /><testcase classname="tests.pipelines.data_engineering.test_nodes" name="BLACK" file="tests/pipelines/data_engineering/test_nodes.py" line="-1" time="0.432" /><testcase classname="tests.pipelines.data_engineering.test_nodes.TestGetJobPostings" name="test_typical" file="tests/pipelines/data_engineering/test_nodes.py" line="7" time="0.117" /><testcase classname="tests.pipelines.data_science.__init__" name="BLACK" file="tests/pipelines/data_science/__init__.py" line="-1" time="0.394" /><testcase classname="tests.pipelines.data_science.test_nodes" name="BLACK" file="tests/pipelines/data_science/test_nodes.py" line="-1" time="0.480" /><testcase classname="tests.pipelines.data_science.test_nodes.TestExpandSalary" name="test_typical" file="tests/pipelines/data_science/test_nodes.py" line="10" time="0.020" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_typical_yearly" file="tests/pipelines/data_science/test_nodes.py" line="37" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_typical_hourly" file="tests/pipelines/data_science/test_nodes.py" line="50" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_single_value_yearly" file="tests/pipelines/data_science/test_nodes.py" line="63" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_single_value_hourly" file="tests/pipelines/data_science/test_nodes.py" line="76" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestExpandLocation" name="test_typical" file="tests/pipelines/data_science/test_nodes.py" line="92" time="0.026" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_typical" file="tests/pipelines/data_science/test_nodes.py" line="119" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_no_neighborhood" file="tests/pipelines/data_science/test_nodes.py" line="132" time="0.002" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_no_zip_code" file="tests/pipelines/data_science/test_nodes.py" line="145" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_only_city_state" file="tests/pipelines/data_science/test_nodes.py" line="158" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_neighborhood_first" file="tests/pipelines/data_science/test_nodes.py" line="171" time="0.002" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="34" time="7.358" timestamp="2020-12-20T19:41:37.098956" hostname="37d5e2fa8129"><testcase classname="tests.__init__" name="BLACK" file="tests/__init__.py" line="-1" time="0.544" /><testcase classname="tests.conftest" name="BLACK" file="tests/conftest.py" line="-1" time="0.429" /><testcase classname="tests.test_parsers" name="BLACK" file="tests/test_parsers.py" line="-1" time="0.452" /><testcase classname="tests.test_parsers.TestIndeedParser" name="test_full_url" file="tests/test_parsers.py" line="15" time="0.001" /><testcase classname="tests.test_parsers.TestIndeedParser" name="test_get_entries_count" file="tests/test_parsers.py" line="29" time="0.004" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_link" file="tests/test_parsers.py" line="60" time="0.002" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_page" file="tests/test_parsers.py" line="70" time="0.003" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_title" file="tests/test_parsers.py" line="80" time="0.005" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_company_name" file="tests/test_parsers.py" line="130" time="0.004" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_location" file="tests/test_parsers.py" line="141" time="0.005" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_salary" file="tests/test_parsers.py" line="152" time="0.003" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_no_salary" file="tests/test_parsers.py" line="172" time="0.002" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_summary" file="tests/test_parsers.py" line="188" time="0.002" /><testcase classname="tests.test_parsers.TestIndeedEntry" name="test_job_description" file="tests/test_parsers.py" line="208" time="1.012" /><testcase classname="tests.test_run" name="BLACK" file="tests/test_run.py" line="-1" time="0.424" /><testcase classname="tests.test_run.TestProjectContext" name="test_project_name" file="tests/test_run.py" line="54" time="0.053" /><testcase classname="tests.test_run.TestProjectContext" name="test_project_version" file="tests/test_run.py" line="57" time="0.052" /><testcase classname="tests.pipelines.__init__" name="BLACK" file="tests/pipelines/__init__.py" line="-1" time="0.403" /><testcase classname="tests.pipelines.data_engineering.__init__" name="BLACK" file="tests/pipelines/data_engineering/__init__.py" line="-1" time="0.408" /><testcase classname="tests.pipelines.data_engineering.test_nodes" name="BLACK" file="tests/pipelines/data_engineering/test_nodes.py" line="-1" time="0.436" /><testcase classname="tests.pipelines.data_engineering.test_nodes.TestGetJobPostings" name="test_typical" file="tests/pipelines/data_engineering/test_nodes.py" line="7" time="0.114" /><testcase classname="tests.pipelines.data_science.__init__" name="BLACK" file="tests/pipelines/data_science/__init__.py" line="-1" time="0.408" /><testcase classname="tests.pipelines.data_science.test_nodes" name="BLACK" file="tests/pipelines/data_science/test_nodes.py" line="-1" time="0.479" /><testcase classname="tests.pipelines.data_science.test_nodes.TestExpandSalary" name="test_typical" file="tests/pipelines/data_science/test_nodes.py" line="10" time="0.014"><failure message="KeyError: &quot;['link'] not in index&quot;">@staticmethod
+    def test_typical():
+        """Assert that the dataframe is transformed as expected."""
+        # === Arrange
+        df_under_test = pd.DataFrame(
+            {
+                "company_name": 10 * ["Aperture Laboratories"],
+                "job_title": (5 * ["Data Scientist"]) + (5 * ["Data Specialist"]),
+                "salary": (5 * ["$90,000 - $130,000 a year"]) + (5 * ["$45 an hour"]),
+            }
+        )
+        expected = pd.DataFrame(
+            {
+                "company_name": 10 * ["Aperture Laboratories"],
+                "job_title": (5 * ["Data Scientist"]) + (5 * ["Data Specialist"]),
+                "annual_salary_min_$": 5 * [90_000] + 5 * [45 * 2_080],
+                "annual_salary_max_$": 5 * [130_000] + 5 * [45 * 2_080],
+            }
+        )
+        # === Act
+&gt;       actual = expand_salary(df_under_test)
+
+tests/pipelines/data_science/test_nodes.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/pipelines/data_science/nodes.py:50: in expand_salary
+    df_expanded_salary[["link", "annual_salary_min_$", "annual_salary_max_$"]],
+/.pyenv/versions/3.8.0/lib/python3.8/site-packages/pandas/core/frame.py:2912: in __getitem__
+    indexer = self.loc._get_listlike_indexer(key, axis=1, raise_missing=True)[1]
+/.pyenv/versions/3.8.0/lib/python3.8/site-packages/pandas/core/indexing.py:1254: in _get_listlike_indexer
+    self._validate_read_indexer(keyarr, indexer, axis, raise_missing=raise_missing)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pandas.core.indexing._LocIndexer object at 0x7ff2a008de50&gt;, key = Index(['link', 'annual_salary_min_$', 'annual_salary_max_$'], dtype='object'), indexer = array([-1,  4,  5]), axis = 1, raise_missing = True
+
+    def _validate_read_indexer(
+        self, key, indexer, axis: int, raise_missing: bool = False
+    ):
+        """
+        Check that indexer can be used to return a result.
+    
+        e.g. at least one element was found,
+        unless the list of keys was actually empty.
+    
+        Parameters
+        ----------
+        key : list-like
+            Targeted labels (only used to show correct error message).
+        indexer: array-like of booleans
+            Indices corresponding to the key,
+            (with -1 indicating not found).
+        axis: int
+            Dimension on which the indexing is being made.
+        raise_missing: bool
+            Whether to raise a KeyError if some labels are not found. Will be
+            removed in the future, and then this method will always behave as
+            if raise_missing=True.
+    
+        Raises
+        ------
+        KeyError
+            If at least one key was requested but none was found, and
+            raise_missing=True.
+        """
+        ax = self.obj._get_axis(axis)
+    
+        if len(key) == 0:
+            return
+    
+        # Count missing values:
+        missing_mask = indexer &lt; 0
+        missing = (missing_mask).sum()
+    
+        if missing:
+            if missing == len(indexer):
+                axis_name = self.obj._get_axis_name(axis)
+                raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+    
+            # We (temporarily) allow for some missing keys with .loc, except in
+            # some cases (e.g. setting) in which "raise_missing" will be False
+            if raise_missing:
+                not_found = list(set(key) - set(ax))
+&gt;               raise KeyError(f"{not_found} not in index")
+E               KeyError: "['link'] not in index"
+
+/.pyenv/versions/3.8.0/lib/python3.8/site-packages/pandas/core/indexing.py:1304: KeyError</failure></testcase><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_typical_yearly" file="tests/pipelines/data_science/test_nodes.py" line="37" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_typical_hourly" file="tests/pipelines/data_science/test_nodes.py" line="50" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_single_value_yearly" file="tests/pipelines/data_science/test_nodes.py" line="63" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseSalary" name="test_single_value_hourly" file="tests/pipelines/data_science/test_nodes.py" line="76" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestExpandLocation" name="test_typical" file="tests/pipelines/data_science/test_nodes.py" line="92" time="0.019" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_typical" file="tests/pipelines/data_science/test_nodes.py" line="119" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_no_neighborhood" file="tests/pipelines/data_science/test_nodes.py" line="132" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_no_zip_code" file="tests/pipelines/data_science/test_nodes.py" line="145" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_only_city_state" file="tests/pipelines/data_science/test_nodes.py" line="158" time="0.001" /><testcase classname="tests.pipelines.data_science.test_nodes.TestParseLocation" name="test_neighborhood_first" file="tests/pipelines/data_science/test_nodes.py" line="171" time="0.001" /></testsuite></testsuites>
