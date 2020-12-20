@@ -30,9 +30,7 @@ def expand_salary(df: pd.DataFrame) -> pd.DataFrame:
         Dataframe with "salary" column dropped and "min_annual_salary_$" and
         "max_annual_salary_$" columns appended
     """
-    df["parsed_salary"] = df.apply(
-        func=lambda row: parse_salary(row["salary"]), axis=1
-    )
+    df["parsed_salary"] = df.apply(func=lambda row: parse_salary(row["salary"]), axis=1)
     # Concatenate original columns with horizontal/column exploded column of arrays
     df = df.apply(
         func=lambda row: pd.concat(
@@ -68,8 +66,7 @@ def parse_salary(salary: str) -> List[float]:
     }
     range_split = range_.split("-")
     salary_min, salary_max = (
-        range_split if len(range_split) > 1
-        else (range_split[0], range_split[0])
+        range_split if len(range_split) > 1 else (range_split[0], range_split[0])
     )
 
     annual_rate = rate_to_annual[rate]
