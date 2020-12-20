@@ -14,7 +14,8 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:  # pragma: no cover
         Dataframe with "location" column dropped but expanded into other,
         finer-detailed columns
     """
-    result = expand_location(df)
+    result = df.drop_duplicates()
+    result = expand_location(result)
     result = expand_salary(result)
     return result
 
