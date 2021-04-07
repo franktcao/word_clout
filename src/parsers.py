@@ -74,7 +74,7 @@ class IndeedEntry:
         return self.entry.find(class_="summary").text.strip()
 
     def get_job_description(self) -> str:
-        """Return full job description."""
+        """Return full raw job description."""
         time.sleep(1)  # Ensuring at least 1 second between page grabs
 
         page = requests.get(self.job_page)
@@ -82,8 +82,6 @@ class IndeedEntry:
         description_info = soup.find(name="div", class_="jobsearch-jobDescriptionText")
 
         description = description_info.text.strip()
-        description = description.replace("\n", " ")
-        description = description.replace("\t", " ")
 
         return description
 
