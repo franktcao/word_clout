@@ -1,9 +1,16 @@
 from collections import Counter
 
 import pandas as pd
+import pyspark.sql.functions as F
+from pyspark.shell import sqlContext
+from pyspark.sql.dataframe import DataFrame as SparkDataFrame
+from pyspark.sql.window import Window
 from tqdm import tqdm
 
-from ...definitions import TERM_FREQ_DIR
+from src.definitions import INV_DOC_FREQ_DIR, TERM_FREQ_DIR
+
+
+# from kedro.extras.datasets.spark import SparkDataSet
 
 
 def convert_description_stats(data: pd.DataFrame) -> None:
@@ -31,3 +38,20 @@ def extract_description_stats(row: pd.Series) -> None:
     df["corpus_id"] = uid
 
     df.to_parquet(TERM_FREQ_DIR / f"{uid}.parquet")
+
+
+def append_idf() -> None:
+    df: SparkDataFrame = sqlContext.read.load(str(TERM_FREQ_DIR))
+    # df: SparkDataFrame = SparkDataSet(str(TERM_FREQ_DIR)).load()
+
+    window = Window().partitionBy("term")
+    df = df.withColumn(
+        "document_frequency", F.count("corpus_id").over(window)
+    ).withColumn("inverse_document_frequency", 1 / F.col("document_frequency"))
+
+    df.write.partitionBy("corpus_id").mode("overwrite").parquet(str(INV_DOC_FREQ_DIR))
+    # SparkDataSet(str(INV_DOC_FREQ_DIR)).save(df)
+
+
+# if __name__ == "__main__":
+#     append_idf()
