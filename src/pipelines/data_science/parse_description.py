@@ -11,11 +11,23 @@ from src.definitions import INV_DOC_FREQ_DIR, TERM_FREQ_DIR
 
 
 # from kedro.extras.datasets.spark import SparkDataSet
+import pyspark.sql.types as T
 
 
-def convert_description_stats(data: pd.DataFrame) -> None:
+def convert_description_stats(data: pd.DataFrame) -> SparkDataFrame:
+    schema = T.StructType(
+        [
+            T.StructField("term", T.StringType()),
+            T.StructField("frequency", T.IntegerType()),
+            T.StructField("corpus_id", T.StringType()),
+        ]
+    )
+    df: SparkDataFrame = sqlContext.createDataFrame([], schema=schema)
     for row in tqdm(data.to_dict(orient="records"), desc="Row"):
-        extract_description_stats(row)
+        df = df.unionByName(extract_description_stats(row))
+
+    # return sqlContext.read.load(str(TERM_FREQ_DIR))
+    return df
 
 
 def clean_description(text: str) -> str:
@@ -25,7 +37,7 @@ def clean_description(text: str) -> str:
     return text
 
 
-def extract_description_stats(row: pd.Series) -> None:
+def extract_description_stats(row: pd.Series) -> SparkDataFrame:
     uid = row["link"]
     description = row["description"]
 
@@ -34,10 +46,21 @@ def extract_description_stats(row: pd.Series) -> None:
 
     term_counts = Counter(description.split())
 
-    df = pd.DataFrame(term_counts.items(), columns=["term", "frequency"])
-    df["corpus_id"] = uid
+    df = sqlContext.createDataFrame(
+        term_counts.items(),
+        schema=T.StructType(
+            [
+                T.StructField("term", T.StringType()),
+                T.StructField("frequency", T.IntegerType()),
+            ]
+        ),
+    )
+    # df["corpus_id"] = uid
+    df = df.withColumn("corpus_id", F.lit(uid))
 
-    df.to_parquet(TERM_FREQ_DIR / f"{uid}.parquet")
+    # df.to_parquet(TERM_FREQ_DIR / f"{uid}.parquet")
+    # return sqlContext.createDataFrame(df)
+    return df
 
 
 def append_idf() -> None:

@@ -43,22 +43,22 @@ ENV PYSPARK_PYTHON "/usr/local/bin/python"
 ENV PYTHONPATH "${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-${PY4J_VERSION}-src.zip:${PYTHONPATH}"
 ENV SPARK_OPTS "--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info"
 
-# install project requirements
+# Install project requirements
 COPY src/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt && rm -f /tmp/requirements.txt
 
-# add kedro user
+# Add kedro user
 ARG KEDRO_UID=999
 ARG KEDRO_GID=0
 RUN groupadd -f -g ${KEDRO_GID} kedro_group && \
 useradd -d /home/kedro -s /bin/bash -g ${KEDRO_GID} -u ${KEDRO_UID} kedro
 
-# copy the whole project except what is in .dockerignore
+# Copy the whole project except what is in .dockerignore
 WORKDIR /home/kedro
 COPY . .
-RUN chown -R kedro:${KEDRO_GID} /home/kedro
-USER kedro
-RUN chmod -R a+w /home/kedro
+#RUN chown -R kedro:${KEDRO_GID} /home/kedro
+#USER kedro
+#RUN chmod -R a+w /home/kedro
 
 EXPOSE 8888
 
