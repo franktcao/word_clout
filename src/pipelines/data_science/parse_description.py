@@ -15,19 +15,22 @@ import pyspark.sql.types as T
 
 
 def convert_description_stats(data: pd.DataFrame) -> SparkDataFrame:
-    schema = T.StructType(
-        [
-            T.StructField("term", T.StringType()),
-            T.StructField("frequency", T.IntegerType()),
-            T.StructField("corpus_id", T.StringType()),
-        ]
-    )
-    df: SparkDataFrame = sqlContext.createDataFrame([], schema=schema)
-    for row in tqdm(data.to_dict(orient="records"), desc="Row"):
-        df = df.unionByName(extract_description_stats(row))
+    # schema = T.StructType(
+    #     [
+    #         T.StructField("term", T.StringType()),
+    #         T.StructField("frequency", T.IntegerType()),
+    #         T.StructField("corpus_id", T.StringType()),
+    #     ]
+    # )
+    # df: SparkDataFrame = sqlContext.createDataFrame([], schema=schema)
+    # for row in tqdm(data.to_dict(orient="records"), desc="Row"):
+        # df = df.unionByName(extract_description_stats(row))
+    # return df
 
-    # return sqlContext.read.load(str(TERM_FREQ_DIR))
-    return df
+    for row in tqdm(data.to_dict(orient="records"), desc="Row"):
+        extract_description_stats(row)
+
+    return sqlContext.read.load(str(TERM_FREQ_DIR))
 
 
 def clean_description(text: str) -> str:
@@ -46,21 +49,25 @@ def extract_description_stats(row: pd.Series) -> SparkDataFrame:
 
     term_counts = Counter(description.split())
 
-    df = sqlContext.createDataFrame(
+    df = pd.DataFrame(
         term_counts.items(),
-        schema=T.StructType(
-            [
-                T.StructField("term", T.StringType()),
-                T.StructField("frequency", T.IntegerType()),
-            ]
-        ),
+        columns=["term", "frequency"]
     )
-    # df["corpus_id"] = uid
-    df = df.withColumn("corpus_id", F.lit(uid))
-
-    # df.to_parquet(TERM_FREQ_DIR / f"{uid}.parquet")
+    df["corpus_id"] = uid
+    # df = sqlContext.createDataFrame(
+    #     term_counts.items(),
+    #     schema=T.StructType(
+    #         [
+    #             T.StructField("term", T.StringType()),
+    #             T.StructField("frequency", T.IntegerType()),
+    #         ]
+    #     ),
+    # )
+    # df = df.withColumn("corpus_id", F.lit(uid))
     # return sqlContext.createDataFrame(df)
-    return df
+    # return df
+
+    df.to_parquet(TERM_FREQ_DIR / f"{uid}.parquet")
 
 
 def append_idf() -> None:
