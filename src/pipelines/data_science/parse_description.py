@@ -37,17 +37,14 @@ def extract_description_stats(row: pd.Series) -> None:
 
     term_counts = Counter(description.split())
 
-    df = pd.DataFrame(
-        term_counts.items(),
-        columns=["term", "frequency"]
-    )
+    df = pd.DataFrame(term_counts.items(), columns=["term", "frequency"])
     df["corpus_id"] = uid
 
     df.to_parquet(TERM_FREQ_DIR / f"{uid}.parquet")
 
 
-def append_idf() -> None:
-    df: SparkDataFrame = sqlContext.read.load(str(TERM_FREQ_DIR))
+def append_idf(df: SparkDataFrame) -> SparkDataFrame:
+    # df: SparkDataFrame = sqlContext.read.load(str(TERM_FREQ_DIR))
     # df: SparkDataFrame = SparkDataSet(str(TERM_FREQ_DIR)).load()
 
     window = Window().partitionBy("term")
@@ -55,7 +52,9 @@ def append_idf() -> None:
         "document_frequency", F.count("corpus_id").over(window)
     ).withColumn("inverse_document_frequency", 1 / F.col("document_frequency"))
 
-    df.write.partitionBy("corpus_id").mode("overwrite").parquet(str(INV_DOC_FREQ_DIR))
+
+    # df.write.partitionBy("corpus_id").mode("overwrite").parquet(str(INV_DOC_FREQ_DIR))
+    return df
     # SparkDataSet(str(INV_DOC_FREQ_DIR)).save(df)
 
 

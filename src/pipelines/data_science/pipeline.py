@@ -18,10 +18,10 @@ def create_pipeline(**kwargs):  # pragma: no cover
                 inputs=["ds_postings_cleaned"],
                 outputs="description_stats",
             ),
-            # node(
-            #     func=append_idf,
-            #     inputs=None,
-            #     outputs=None,
-            # ),
+            node(
+                func=append_idf,
+                inputs="description_stats",
+                outputs="tfidf_base",
+            ),
         ]
     )
