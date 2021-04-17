@@ -7,14 +7,17 @@ from pyspark.sql.dataframe import DataFrame as SparkDataFrame
 from pyspark.sql.window import Window
 from tqdm import tqdm
 
-from src.definitions import INV_DOC_FREQ_DIR, TERM_FREQ_DIR
-
-
-# from kedro.extras.datasets.spark import SparkDataSet
-import pyspark.sql.types as T
+from src.definitions import TERM_FREQ_DIR
 
 
 def convert_description_stats(data: pd.DataFrame) -> SparkDataFrame:
+    """Convert job descriptions to term frequency counts.
+
+    :param data:
+        Table with job description columns
+    :return:
+        Table with term frequency counts
+    """
     for row in tqdm(data.to_dict(orient="records"), desc="Row"):
         extract_description_stats(row)
 
@@ -22,6 +25,13 @@ def convert_description_stats(data: pd.DataFrame) -> SparkDataFrame:
 
 
 def clean_description(text: str) -> str:
+    """Clean description of characters to improve tokenization.
+
+    :param text:
+        Description text to clean
+    :return:
+        Cleaned description text
+    """
     text = text.replace("\n", " ")
     text = text.replace("\t", " ")
 
@@ -29,6 +39,11 @@ def clean_description(text: str) -> str:
 
 
 def extract_description_stats(row: pd.Series) -> None:
+    """Convert description in `row` to table with term frequency counts as parquet file.
+
+    :param row:
+        Record with job description and unique ID
+    """
     uid = row["link"]
     description = row["description"]
 
@@ -44,18 +59,24 @@ def extract_description_stats(row: pd.Series) -> None:
 
 
 def append_idf(df: SparkDataFrame) -> SparkDataFrame:
-    # df: SparkDataFrame = sqlContext.read.load(str(TERM_FREQ_DIR))
-    # df: SparkDataFrame = SparkDataSet(str(TERM_FREQ_DIR)).load()
+    """Append columns to `df` for document frequency and inverse document frequency.
 
+    :param df:
+        Table with terms and corpus unique ID to extract document frequency.
+        Requires columns:
+            * term
+            * corpus_id
+    :return:
+        Original table `df` with extra columns:
+            * document_frequency
+            * inverse_document_frequency
+    """
     window = Window().partitionBy("term")
     df = df.withColumn(
         "document_frequency", F.count("corpus_id").over(window)
     ).withColumn("inverse_document_frequency", 1 / F.col("document_frequency"))
 
-
-    # df.write.partitionBy("corpus_id").mode("overwrite").parquet(str(INV_DOC_FREQ_DIR))
     return df
-    # SparkDataSet(str(INV_DOC_FREQ_DIR)).save(df)
 
 
 # if __name__ == "__main__":
