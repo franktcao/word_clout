@@ -3,8 +3,8 @@ from typing import cast
 from unittest.mock import call
 
 import pandas as pd
-from pyspark.shell import sqlContext
 
+from pyspark.shell import sqlContext
 from src.pipelines.data_science.parse_description import (
     append_idf,
     clean_description,
