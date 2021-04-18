@@ -1,7 +1,7 @@
 from kedro.pipeline import Pipeline, node
 
 from .nodes import clean_data
-from .parse_description import append_idf, convert_description_stats
+from .parse_description import append_idf, convert_descriptions_to_term_counts
 
 
 # Not covered since just returning pipeline
@@ -14,7 +14,7 @@ def create_pipeline(**kwargs):  # pragma: no cover
                 outputs="ds_postings_cleaned",
             ),
             node(
-                func=convert_description_stats,
+                func=convert_descriptions_to_term_counts,
                 inputs=["ds_postings_cleaned"],
                 outputs="description_stats",
             ),

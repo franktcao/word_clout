@@ -11,7 +11,7 @@ from tqdm import tqdm
 from src.definitions import TERM_FREQ_DIR
 
 
-def convert_description_stats(
+def convert_descriptions_to_term_counts(
     data: pd.DataFrame, intermediate_path: Path = TERM_FREQ_DIR
 ) -> SparkDataFrame:
     """Convert job descriptions to term frequency counts.
@@ -23,32 +23,46 @@ def convert_description_stats(
     :return:
         Table with term frequency counts
     """
-    for row in tqdm(data.to_dict(orient="records"), desc="Row"):
-        extract_description_stats(row, output_directory=intermediate_path)
+    write_term_counts_to_parquet(data, output_directory=intermediate_path)
 
     return sqlContext.read.load(str(intermediate_path))
 
 
-def extract_description_stats(row: pd.Series, output_directory: Path) -> None:
-    """Convert description in `row` to table with term frequency counts as parquet file.
+def write_term_counts_to_parquet(data: pd.DataFrame, output_directory: Path) -> None:
+    """
+    Convert text descriptions in each row of `data` to its own table. Each row of the
+    resulting table has a term, its frequency counts in the description, and the ID
+    where that description comes from.
 
-    :param row:
-        Record with job description and unique ID
+    :param data:
+        Table where each row has a job description and unique ID
     :param output_directory:
         Directory to write description stat table to
     """
-    uid = row["link"]
-    description = row["description"]
+    for row in tqdm(data.to_dict(orient="records"), desc="Row"):
+        uid = row["link"]
+        description = row["description"]
 
-    description = clean_description(description)
-    description = description.lower()
+        description = clean_description(description)
 
-    term_counts = Counter(description.split())
+        df = count_terms(text=description)
+        df["corpus_id"] = uid
 
+        df.to_parquet(output_directory / f"{uid}.parquet")
+
+
+def count_terms(text: str) -> pd.DataFrame:
+    """Tokenize, count, and return table with term counts.
+
+    :param text:
+        Words to tokenize and count
+    :return:
+        Table with columns for individual terms and counts
+    """
+    term_counts = Counter(text.split())
     df = pd.DataFrame(term_counts.items(), columns=["term", "frequency"])
-    df["corpus_id"] = uid
 
-    df.to_parquet(output_directory / f"{uid}.parquet")
+    return df
 
 
 def clean_description(text: str) -> str:
@@ -61,6 +75,7 @@ def clean_description(text: str) -> str:
     """
     text = text.replace("\n", " ")
     text = text.replace("\t", " ")
+    text = text.lower()
 
     return text
 
