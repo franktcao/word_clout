@@ -137,7 +137,7 @@ protobuf==3.15.8
 psutil==5.8.0
 ptyprocess==0.7.0
 py==1.10.0
-py4j==0.10.7
+py4j==0.10.9
 pyarrow==0.17.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -150,7 +150,7 @@ Pygments==2.8.1
 pyparsing==2.4.7
 pyproj==3.0.1
 pyrsistent==0.17.3
-pyspark==2.4.7
+pyspark==3.1.1
 pyspark-stubs==2.3.0.post2
 pytest==5.4.3
 pytest-black==0.3.12
