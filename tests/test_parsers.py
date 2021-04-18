@@ -1,7 +1,7 @@
 import pytest
 from bs4 import BeautifulSoup
 
-from src.parsers import IndeedParser, IndeedEntry
+from src.parsers import IndeedEntry, IndeedParser
 
 
 class TestIndeedParser:

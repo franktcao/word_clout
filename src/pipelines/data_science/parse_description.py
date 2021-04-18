@@ -1,12 +1,12 @@
 from collections import Counter
 
 import pandas as pd
+from tqdm import tqdm
+
 import pyspark.sql.functions as F
 from pyspark.shell import sqlContext
 from pyspark.sql.dataframe import DataFrame as SparkDataFrame
 from pyspark.sql.window import Window
-from tqdm import tqdm
-
 from src.definitions import TERM_FREQ_DIR
 
 
