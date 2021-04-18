@@ -2,7 +2,7 @@
 
 docker-compose build
 docker-compose run black .
-docker-compose run isort .
+docker-compose run isort -rc ./*
 
 docker-compose run --rm unit-tests
 

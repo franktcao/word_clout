@@ -41,3 +41,15 @@ indeed_data_scientist_postings:
 ds_postings_cleaned:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/ds_postings_cleaned.csv
+
+description_stats:
+  type: spark.SparkDataSet
+  filepath: data/02_intermediate/description_stats.parquet
+  save_args:
+    mode: overwrite  # Overwrite even when the file already exists
+
+tfidf_base:
+  type: spark.SparkDataSet
+  filepath: data/03_primary/tfidf_base.parquet
+  save_args:
+    mode: overwrite  # Overwrite even when the file already exists

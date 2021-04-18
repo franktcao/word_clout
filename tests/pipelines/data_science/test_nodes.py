@@ -1,8 +1,9 @@
 import pandas as pd
+
 from src.pipelines.data_science.nodes import (
     expand_location,
-    parse_location,
     expand_salary,
+    parse_location,
     parse_salary,
 )
 

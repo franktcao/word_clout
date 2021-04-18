@@ -1,4 +1,5 @@
 from typing import List
+
 import pandas as pd
 
 
@@ -144,7 +145,7 @@ def expand_location(df: pd.DataFrame) -> pd.DataFrame:
     columns_to_expanded = {location: replacement_columns}
 
     # Append a column of the parsed location
-    df["parsed_location_info"] = df[df.columns].apply(
+    df.loc[:, "parsed_location_info"] = df[df.columns].apply(
         func=lambda row: parse_location(row[location]), axis=1
     )
 

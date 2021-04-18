@@ -3,7 +3,7 @@ version: "3.4"
 x-tests: &tests
   build:
     context: .
-    dockerfile: testing_framework/Dockerfile
+    dockerfile: Dockerfile
   image: word_clout:test-venv
   working_dir: /home
   volumes:
