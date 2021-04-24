@@ -24,7 +24,6 @@ def get_job_postings(
     :return:
         Dataframe with job title, company, and salary information
     """
-
     locations = locations if locations else ["Boston, MA"]
     df = pd.DataFrame(
         # fmt: off
