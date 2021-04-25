@@ -6,7 +6,7 @@ import pandas as pd
 
 from pyspark.shell import sqlContext
 from src.pipelines.data_science.parse_description import (
-    append_idf,
+    append_document_appearances,
     clean_description,
     convert_descriptions_to_term_counts,
     count_terms,
@@ -143,9 +143,9 @@ class TestCleanDescription:
         assert actual == expected
 
 
-class TestAppendIdf:
+class TestAppendDocumentAppearances:
     @staticmethod
-    def test_appending_idf_column():
+    def test_appending_document_appearances_column():
         """Assert columns append correct calculations."""
         # === Arrange
         raw_data = pd.DataFrame(
@@ -158,13 +158,12 @@ class TestAppendIdf:
         df_to_test = sqlContext.createDataFrame(raw_data)
 
         expected = raw_data
-        expected["document_frequency"] = [2, 1, 2, 1]
-        expected["inverse_document_frequency"] = [1 / 2, 1, 1 / 2, 1]
+        expected["document_appearances"] = [2, 1, 2, 1]
         expected = expected.sort_values("term").reset_index(drop=True)
 
         # === Act
         actual = (
-            cast(pd.DataFrame, append_idf(df_to_test).toPandas())
+            cast(pd.DataFrame, append_document_appearances(df_to_test).toPandas())
             .sort_values("term")
             .reset_index(drop=True)
         )

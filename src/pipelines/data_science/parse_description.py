@@ -1,20 +1,21 @@
 from collections import Counter
 from pathlib import Path
+from typing import List
 
 import pandas as pd
-from tqdm import tqdm
-
 import pyspark.sql.functions as F
 from pyspark.shell import sqlContext
 from pyspark.sql.dataframe import DataFrame as SparkDataFrame
 from pyspark.sql.window import Window
+from tqdm import tqdm
+
 from src.definitions import TERM_FREQ_DIR
 
 
 def convert_descriptions_to_term_counts(
     data: pd.DataFrame, intermediate_path: Path = TERM_FREQ_DIR
 ) -> SparkDataFrame:
-    """Convert job descriptions to term frequency counts.
+    """Convert job descriptions to term counts.
 
     :param data:
         Table with job description columns
@@ -39,6 +40,7 @@ def write_term_counts_to_parquet(data: pd.DataFrame, output_directory: Path) -> 
     :param output_directory:
         Directory to write description stat table to
     """
+    _validate_has_columns(data, ["link", "description"])
     for row in tqdm(data.to_dict(orient="records"), desc="Row"):
         uid = row["link"]
         description = row["description"]
@@ -46,7 +48,7 @@ def write_term_counts_to_parquet(data: pd.DataFrame, output_directory: Path) -> 
         description = clean_description(description)
 
         df = count_terms(text=description)
-        df["corpus_id"] = uid
+        df.loc[:, "corpus_id"] = uid
 
         df.to_parquet(output_directory / f"{uid}.parquet")
 
@@ -80,8 +82,8 @@ def clean_description(text: str) -> str:
     return text
 
 
-def append_idf(df: SparkDataFrame) -> SparkDataFrame:
-    """Append columns to `df` for document frequency and inverse document frequency.
+def append_document_appearances(df: SparkDataFrame) -> SparkDataFrame:
+    """Append column to `df` to count how many documents contain each term.
 
     :param df:
         Table with terms and corpus unique ID to extract document frequency.
@@ -89,16 +91,23 @@ def append_idf(df: SparkDataFrame) -> SparkDataFrame:
             * term
             * corpus_id
     :return:
-        Original table `df` with extra columns:
-            * document_frequency
-            * inverse_document_frequency
+        Original table `df` with extra column:
+            * document_appearances
     """
+    _validate_has_columns(df, ["term", "corpus_id"])
     window = Window().partitionBy("term")
-    df = df.withColumn(
-        "document_frequency", F.count("corpus_id").over(window)
-    ).withColumn("inverse_document_frequency", 1 / F.col("document_frequency"))
 
-    return df
+    return df.withColumn("document_appearances", F.count("corpus_id").over(window))
+
+
+def _validate_has_columns(df: SparkDataFrame, required_columns: List[str]) -> None:
+    if not set(required_columns).issubset(df.columns):
+        raise ValueError(
+            "`df` does not contain required columns."
+            f"\n\tMissing `df` columns: {set(required_columns).difference(df.columns)}"
+            f"\n\t`df` columns: {df.columns}"
+            f"\n\tRequired columns: {required_columns}"
+        )
 
 
 # if __name__ == "__main__":
