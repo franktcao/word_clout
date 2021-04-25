@@ -1,5 +1,45 @@
 import math
 from typing import Optional
+from pyspark.sql.dataframe import DataFrame as SparkDataFrame
+import itertools
+from .parse_description import _validate_has_columns
+import pyspark.sql.functions as F
+import pyspark.sql.types as T
+from pyspark.sql.window import Window
+
+
+def append_tf(df: SparkDataFrame) -> SparkDataFrame:
+    _validate_has_columns(df, ["count_in_document", "corpus_id"])
+
+    window = Window.partitionBy("corpus_id")
+    result = df.withColumn(
+        "total_terms_in_document", F.sum(F.col("count_in_document")).over(window)
+    ).withColumn(
+        "max_count_in_document", F.max(F.col("count_in_document")).over(window)
+    )
+
+    methods = ["standard", "smooth", "max", "prob"]
+    method_to_kwargs = {"max": {"k": 0.5}}
+    for method in methods:
+        new_column = f"tf_{method}"
+        kwargs = method_to_kwargs.get(method, dict())
+        doc_freq_udf = F.udf(
+            lambda term_count, tot_term_count, max_term_count: get_term_frequency(
+                term_count,
+                tot_term_count,
+                max_term_count=max_term_count,
+                method=method,
+                **kwargs,
+            ),
+            T.FloatType(),
+        )
+        result = result.withColumn(
+            new_column,
+            doc_freq_udf(
+                "count_in_document", "total_terms_in_document", "max_term_in_counts"
+            ),
+        )
+    return result
 
 
 def get_document_frequency(
@@ -143,4 +183,4 @@ def _term_freq_double_k_norm(term_count: int, **kwargs) -> float:  # pragma: no 
             f"\n\tk: {k}\n\tmax_term_count: {max_term_count}"
             f"\n\tPassed in keyword arguments: \n\t\t{kwargs}"
         )
-    return k + k * (term_count / max_term_count)
+    return k + (1 - k) * (term_count / max_term_count)
