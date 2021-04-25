@@ -3,12 +3,12 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
+from tqdm import tqdm
+
 import pyspark.sql.functions as F
 from pyspark.shell import sqlContext
 from pyspark.sql.dataframe import DataFrame as SparkDataFrame
 from pyspark.sql.window import Window
-from tqdm import tqdm
-
 from src.definitions import TERM_FREQ_DIR
 
 
@@ -26,7 +26,34 @@ def convert_descriptions_to_term_counts(
     """
     write_term_counts_to_parquet(data, output_directory=intermediate_path)
 
-    return sqlContext.read.load(str(intermediate_path))
+    df = sqlContext.read.load(str(intermediate_path))
+
+    return append_total_and_max_counts_in_doc(df)
+
+
+def append_total_and_max_counts_in_doc(df: SparkDataFrame) -> SparkDataFrame:
+    """
+    Append a column for total number of terms in document and a column for maximum
+    count in document.
+
+    :param df:
+        Table with term counts for each 'corpus_id'. Required columns:
+            * count_in_document
+            * corpus_id`
+    :return:
+        `df` with additional columns:
+            * total_terms_in_document
+            * max_count_in_document
+    """
+    _validate_has_columns(df, ["count_in_document", "corpus_id"])
+
+    window = Window.partitionBy("corpus_id")
+    result = df.withColumn(
+        "total_terms_in_document", F.sum(F.col("count_in_document")).over(window)
+    ).withColumn(
+        "max_count_in_document", F.max(F.col("count_in_document")).over(window)
+    )
+    return result
 
 
 def write_term_counts_to_parquet(data: pd.DataFrame, output_directory: Path) -> None:
@@ -100,7 +127,10 @@ def append_document_appearances(df: SparkDataFrame) -> SparkDataFrame:
     return df.withColumn("document_appearances", F.count("corpus_id").over(window))
 
 
-def _validate_has_columns(df: SparkDataFrame, required_columns: List[str]) -> None:
+# Not covered: Validation
+def _validate_has_columns(
+    df: SparkDataFrame, required_columns: List[str]
+) -> None:  # pragma: no cover
     if not set(required_columns).issubset(df.columns):
         raise ValueError(
             "`df` does not contain required columns."
