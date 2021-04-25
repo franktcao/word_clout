@@ -92,7 +92,7 @@ class TestCountTerms:
         text_to_test = " ".join(raw_data)
 
         expected = pd.DataFrame(
-            {"term": ["one", "two", "three", "four"], "frequency": [1, 2, 3, 4],}
+            {"term": ["one", "two", "three", "four"], "count_in_document": [1, 2, 3, 4]}
         )
 
         # === Act

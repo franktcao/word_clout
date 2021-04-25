@@ -60,7 +60,7 @@ def count_terms(text: str) -> pd.DataFrame:
         Table with columns for individual terms and counts
     """
     term_counts = Counter(text.split())
-    df = pd.DataFrame(term_counts.items(), columns=["term", "frequency"])
+    df = pd.DataFrame(term_counts.items(), columns=["term", "count_in_document"])
 
     return df
 

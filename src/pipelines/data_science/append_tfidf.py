@@ -1,6 +1,5 @@
 import math
-import pprint
-import numpy as np
+from typing import Optional
 
 
 def get_document_frequency(
@@ -26,25 +25,41 @@ def get_document_frequency(
         Value of document frequency for the given method
     """
     if method == "standard":
-        return doc_count / n_posts
+        return _doc_freq_standard(doc_count, n_posts)
     elif method == "smooth":
-        return (1 + doc_count) / n_posts
+        return _doc_freq_smooth(doc_count, n_posts)
     elif method == "max":
-        max_doc_count = kwargs.get("max_doc_count", None)
-        if not max_doc_count:
-            raise ValueError(
-                "Since 'max' method chosen, 'max_doc_count' must be provided as keyword"
-                " argument."
-            )
-        return (1 + doc_count) / max_doc_count
+        return _doc_freq_max(doc_count, **kwargs)
     elif method == "prob":
-        return doc_count / (n_posts - doc_count + 1)
+        return _doc_freq_prob(doc_count, n_posts)
     else:
         raise ValueError("`method` must be one of 'standard', 'smooth', 'max', 'prob'.")
 
 
+def _doc_freq_standard(doc_count: int, n_posts: int) -> float:
+    return doc_count / n_posts
+
+
+def _doc_freq_smooth(doc_count: int, n_posts: int) -> float:
+    return (1 + doc_count) / n_posts
+
+
+def _doc_freq_max(doc_count: int, **kwargs) -> float:
+    max_doc_count = kwargs.get("max_doc_count", None)
+    if not max_doc_count:
+        raise ValueError(
+            "Since 'max' method chosen, 'max_doc_count' must be provided as keyword"
+            " argument."
+        )
+    return (1 + doc_count) / max_doc_count
+
+
+def _doc_freq_prob(doc_count: int, n_posts: int) -> float:
+    return doc_count / (n_posts - doc_count + 1)
+
+
 def get_inverse_doc_frequency(
-    doc_freq: float, rescale_method: str = "standard"
+    doc_freq: float, rescale_method: Optional[str] = None
 ) -> float:
     """
     Return inverse document frequency (IDF).
@@ -59,7 +74,7 @@ def get_inverse_doc_frequency(
         Value of IDF given the given method
     """
     inv_doc_freq = 1 / doc_freq
-    if rescale_method == "standard":
+    if rescale_method is None:
         return inv_doc_freq
     elif rescale_method == "log":
         return math.log(inv_doc_freq)
@@ -89,20 +104,34 @@ def get_term_frequency(
         Value of term frequency for a given method
     """
     if method == "standard":
-        return term_count / float(tot_term_count)
+        return _term_freq_standard(term_count, tot_term_count)
     elif method == "log_norm":
-        return 1 + math.log(1 + term_count)
+        return _term_freq_log_norm(term_count)
     elif method == "double_k_norm":
-        k = kwargs.get("k", None)
-        if not k:
-            raise ValueError(
-                "Since `method` is 'double_k_norm', 'k' must be provided as keyword "
-                "argument."
-            )
-        return k + k * (term_count / max_term_count)
+        return _term_freq_double_k_norm(term_count, **kwargs)
     else:
         raise ValueError(
-            "`method` must be one of 'standard', 'log_norm', or 'double_k_norm"
+            "`method` must be one of 'standard', 'log_norm', or 'double_k_norm'"
         )
 
 
+def _term_freq_standard(term_count: int, tot_term_count: int) -> float:
+    return term_count / float(tot_term_count)
+
+
+def _term_freq_log_norm(term_count: int) -> float:
+    return 1 + math.log(1 + term_count)
+
+
+def _term_freq_double_k_norm(term_count: int, **kwargs) -> float:
+    k = kwargs.get("k", None)
+    max_term_count = kwargs.get("max_term_count", None)
+    if not k or not max_term_count:
+        raise ValueError(
+            "Since `method` is 'double_k_norm', both 'k' and 'max_term_count' must "
+            "be provided as keyword arguments."
+            "\nRequired keyword arguments:"
+            f"\n\tk: {k}\n\tmax_term_count: {max_term_count}"
+            f"\n\tPassed in keyword arguments: \n\t\t{kwargs}"
+        )
+    return k + k * (term_count / max_term_count)
