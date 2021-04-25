@@ -26,7 +26,7 @@ def convert_descriptions_to_term_counts(
     """
     write_term_counts_to_parquet(data, output_directory=intermediate_path)
 
-    df = sqlContext.read.load(str(intermediate_path))
+    df = sqlContext.read.parquet(str(intermediate_path))
 
     return append_total_and_max_counts_in_doc(df)
 
@@ -53,6 +53,7 @@ def append_total_and_max_counts_in_doc(df: SparkDataFrame) -> SparkDataFrame:
     ).withColumn(
         "max_count_in_document", F.max(F.col("count_in_document")).over(window)
     )
+
     return result
 
 
