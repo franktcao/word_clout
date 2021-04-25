@@ -42,14 +42,14 @@ ds_postings_cleaned:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/ds_postings_cleaned.csv
 
-description_stats:
+description_term_counts:
   type: spark.SparkDataSet
-  filepath: data/02_intermediate/description_stats.parquet
+  filepath: data/02_intermediate/description_term_counts.parquet
   save_args:
     mode: overwrite  # Overwrite even when the file already exists
 
-tfidf_base:
+term_and_doc_counts:
   type: spark.SparkDataSet
-  filepath: data/03_primary/tfidf_base.parquet
+  filepath: data/03_primary/term_and_doc_counts.parquet
   save_args:
     mode: overwrite  # Overwrite even when the file already exists
