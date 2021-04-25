@@ -7,6 +7,7 @@ import pandas as pd
 from pyspark.shell import sqlContext
 from src.pipelines.data_science.parse_description import (
     append_document_appearances,
+    append_total_and_max_counts_in_doc,
     clean_description,
     convert_descriptions_to_term_counts,
     count_terms,
@@ -22,12 +23,18 @@ class TestConvertDescriptionStats:
         mocked_df = mocker.MagicMock()
 
         # Mocked since unit tested elsewhere
+        module_prefix = "src.pipelines.data_science.parse_description"
         mocked_inner_function = mocker.patch(
-            "src.pipelines.data_science.parse_description.write_term_counts_to_parquet",
+            f"{module_prefix}.write_term_counts_to_parquet",
         )
         # Mocked since no parquet file is actually written
-        mocked_spark_data = mocker.patch(
-            "src.pipelines.data_science.parse_description.sqlContext"
+        mocked_returned_df = mocker.MagicMock()
+        mocked_spark_data = mocker.patch(f"{module_prefix}.sqlContext")
+        mocked_spark_data.read.load.return_value = mocked_returned_df
+
+        # Mocked since unit tested elsewhere
+        mocked_append_total_and_max_counts_in_doc = mocker.patch(
+            f"{module_prefix}.append_total_and_max_counts_in_doc"
         )
 
         # === Act
@@ -38,6 +45,44 @@ class TestConvertDescriptionStats:
             mocked_df, output_directory=Path(tmp_path)
         )
         mocked_spark_data.read.load.assert_called_once_with(str(tmp_path))
+        mocked_append_total_and_max_counts_in_doc.assert_called_with(mocked_returned_df)
+
+
+class TestAppendTotalAndMaxCountsInDoc:
+    @staticmethod
+    def test_expected_counts():
+        """Assert counts and maximums are extracted as expected."""
+        # === Arrange
+        data_to_test = sqlContext.createDataFrame(
+            pd.DataFrame(
+                {
+                    # Used to help compare
+                    "uid": range(10),
+                    "corpus_id": 3 * ["1"] + 5 * ["2"] + 2 * ["3"],
+                    "count_in_document": [1, 2, 3] + [4, 5, 6, 7, 8] + [9, 10],
+                }
+            )
+        )
+        expected = pd.DataFrame(
+            {
+                "uid": range(10),
+                "corpus_id": 3 * ["1"] + 5 * ["2"] + 2 * ["3"],
+                "count_in_document": [1, 2, 3] + [4, 5, 6, 7, 8] + [9, 10],
+                "total_terms_in_document": 3 * [6] + 5 * [30] + 2 * [19],
+                "max_count_in_document": 3 * [3] + 5 * [8] + 2 * [10],
+            }
+        )
+
+        # === Act
+        actual = (
+            append_total_and_max_counts_in_doc(df=data_to_test)
+            .toPandas()
+            .sort_values("uid")
+            .reset_index(drop=True)
+        )
+
+        # === Assert
+        pd.testing.assert_frame_equal(actual, expected)
 
 
 class TestExtractDescriptionStats:
@@ -73,8 +118,8 @@ class TestExtractDescriptionStats:
         mocked_count_terms.assert_called_with(text="some other description")
 
         # Assert the corpus ID is recorded for every row
-        mocked_returned_df.__setitem__.assert_has_calls(
-            [call("corpus_id", 1), call("corpus_id", 2)]
+        mocked_returned_df.loc.__setitem__.assert_has_calls(
+            [call((slice(None), "corpus_id"), 2)]
         )
 
         # Assert parquet is written for each row
