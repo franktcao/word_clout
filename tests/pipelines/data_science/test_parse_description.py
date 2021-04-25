@@ -3,8 +3,8 @@ from typing import cast
 from unittest.mock import call
 
 import pandas as pd
-
 from pyspark.shell import sqlContext
+
 from src.pipelines.data_science.parse_description import (
     append_document_appearances,
     clean_description,
@@ -73,8 +73,8 @@ class TestExtractDescriptionStats:
         mocked_count_terms.assert_called_with(text="some other description")
 
         # Assert the corpus ID is recorded for every row
-        mocked_returned_df.__setitem__.assert_has_calls(
-            [call("corpus_id", 1), call("corpus_id", 2)]
+        mocked_returned_df.loc.__setitem__.assert_has_calls(
+            [call((slice(None), "corpus_id"), 2)]
         )
 
         # Assert parquet is written for each row

@@ -3,12 +3,12 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
+from tqdm import tqdm
+
 import pyspark.sql.functions as F
 from pyspark.shell import sqlContext
 from pyspark.sql.dataframe import DataFrame as SparkDataFrame
 from pyspark.sql.window import Window
-from tqdm import tqdm
-
 from src.definitions import TERM_FREQ_DIR
 
 
@@ -100,7 +100,10 @@ def append_document_appearances(df: SparkDataFrame) -> SparkDataFrame:
     return df.withColumn("document_appearances", F.count("corpus_id").over(window))
 
 
-def _validate_has_columns(df: SparkDataFrame, required_columns: List[str]) -> None:
+# Not covered: Validation
+def _validate_has_columns(
+    df: SparkDataFrame, required_columns: List[str]
+) -> None:  # pragma: no cover
     if not set(required_columns).issubset(df.columns):
         raise ValueError(
             "`df` does not contain required columns."
