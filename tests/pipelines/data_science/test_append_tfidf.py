@@ -1,14 +1,13 @@
 import pytest
 from pytest_steps import test_steps
 
-from src.pipelines.data_science.append_tfidf import (
+from src.pipelines.data_science.append_tfidf import (  # get_term_frequency,
     get_document_frequency,
     get_inverse_doc_frequency,
-    get_term_frequency,
 )
 
 
-class TestGetTermFrequency:
+class TestGetDocumentFrequency:
     @staticmethod
     @test_steps("standard", "smooth", "max", "prob")
     def test_different_methods_pass_through(mocker) -> None:
@@ -127,82 +126,3 @@ class TestGetInverseDocumentFrequency:
         # === Arrange, Act, & Assert
         with pytest.raises(ValueError, match=r".*method.* must be one of"):
             get_inverse_doc_frequency(doc_freq=2, rescale_method="whatever")
-
-
-class TestGetDocumentFrequency:
-    @staticmethod
-    @test_steps("standard", "log_norm", "double_k_norm")
-    def test_method_logic(mocker) -> None:
-        """Assert logic flows for different methods passed in."""
-        # === Arrange
-        expected = 1
-        doc_count_to_test = 123
-        n_posts_to_test = 456
-
-        mocked_implementation = mocker.patch(
-            "src.pipelines.data_science.append_tfidf._term_freq_standard",
-            return_value=1,
-        )
-
-        # === Act
-        actual = get_term_frequency(
-            term_count=doc_count_to_test,
-            tot_term_count=n_posts_to_test,
-            method="standard",
-        )
-
-        # === Assert
-        assert actual == expected
-        mocked_implementation.assert_called_with(doc_count_to_test, n_posts_to_test)
-        yield
-
-        # === Arrange
-        expected = 2
-        mocked_implementation = mocker.patch(
-            "src.pipelines.data_science.append_tfidf._term_freq_log_norm",
-            return_value=2,
-        )
-
-        # === Act
-        actual = get_term_frequency(
-            term_count=doc_count_to_test,
-            tot_term_count=n_posts_to_test,
-            method="log_norm",
-        )
-
-        # === Assert
-        assert actual == expected
-        mocked_implementation.assert_called_with(doc_count_to_test)
-        yield
-
-        # === Arrange
-        expected = 3
-        mocked_implementation = mocker.patch(
-            "src.pipelines.data_science.append_tfidf._term_freq_double_k_norm",
-            return_value=3,
-        )
-
-        # === Act
-        actual = get_term_frequency(
-            term_count=doc_count_to_test,
-            tot_term_count=n_posts_to_test,
-            method="double_k_norm",
-            k=246,
-            max_term_count=135,
-        )
-
-        # === Assert
-        assert actual == expected
-        mocked_implementation.assert_called_with(
-            doc_count_to_test, k=246, max_term_count=135
-        )
-        yield
-
-    @staticmethod
-    def test_bad_method() -> None:
-        """Raise error when unrecognized method is passed in."""
-        # === Act & Assert
-        with pytest.raises(ValueError, match=r".*method.* must be one of"):
-            get_term_frequency(
-                term_count=1, tot_term_count=2, method="whatever",
-            )

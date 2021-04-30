@@ -30,7 +30,7 @@ class TestConvertDescriptionStats:
         # Mocked since no parquet file is actually written
         mocked_returned_df = mocker.MagicMock()
         mocked_spark_data = mocker.patch(f"{module_prefix}.sqlContext")
-        mocked_spark_data.read.load.return_value = mocked_returned_df
+        mocked_spark_data.read.parquet.return_value = mocked_returned_df
 
         # Mocked since unit tested elsewhere
         mocked_append_total_and_max_counts_in_doc = mocker.patch(
@@ -44,7 +44,7 @@ class TestConvertDescriptionStats:
         mocked_inner_function.assert_called_with(
             mocked_df, output_directory=Path(tmp_path)
         )
-        mocked_spark_data.read.load.assert_called_once_with(str(tmp_path))
+        mocked_spark_data.read.parquet.assert_called_once_with(str(tmp_path))
         mocked_append_total_and_max_counts_in_doc.assert_called_with(mocked_returned_df)
 
 
