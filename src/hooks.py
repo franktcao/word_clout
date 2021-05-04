@@ -46,7 +46,6 @@ class ProjectHooks:
 
         Returns:
             A mapping from a pipeline name to a ``Pipeline`` object.
-
         """
         data_engineering_pipeline = de.create_pipeline()
         data_science_pipeline = ds.create_pipeline()
@@ -55,7 +54,8 @@ class ProjectHooks:
             "de": data_engineering_pipeline,
             "ds": data_science_pipeline,
             # "__default__": data_engineering_pipeline + data_science_pipeline,
-            "__default__": data_science_pipeline,
+            "__default__": data_engineering_pipeline,
+            # "__default__": data_science_pipeline,
         }
 
     @hook_impl
